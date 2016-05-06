@@ -1,0 +1,4 @@
+include LICENSE
+include README.rst
+recursive-include openquakeplatform/standalone/static *
+recursive-include openquakeplatform/standalone/templates *
