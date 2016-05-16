@@ -11,7 +11,7 @@ setup(
     name='oq-platform-standalone',
     version='1.0',
 #    packages=find_packages(),
-    packages=["openquakeplatform.standalone"],
+    packages=["openquakeplatform_standalone", "openquakeplatform_server"],
     include_package_data=True,
     license='BSD License',  # example license
     description='Standalone replacements for OpenQuake Platform.',
@@ -19,6 +19,7 @@ setup(
     url='http://github.com/gem/oq-platform-standalone',
     author='GEM Foundation',
     author_email='devops@openquake.org',
+    scripts=['openquakeplatform_server/bin/openquakeplatform_srv.py'],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
