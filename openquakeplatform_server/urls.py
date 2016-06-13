@@ -27,4 +27,5 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^ipt/', include("openquakeplatform_ipt.urls"), name='home'),
+    url(r'^taxtweb/', include("openquakeplatform_taxtweb.urls"), name='taxtweb'),
 )
