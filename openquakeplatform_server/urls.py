@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 
-from settings import OPENQUAKE_APPS
+from settings import STANDALONE_APPS
 from django.contrib import admin
 from django.views.generic import TemplateView
 
@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 )
 
-for app in OPENQUAKE_APPS:
+for app in STANDALONE_APPS:
     app_name = app.split('_')[1]
     urlpatterns += patterns('',
                             url(r'^%s/' % app_name, include('%s.urls' % app,

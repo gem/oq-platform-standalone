@@ -42,12 +42,12 @@ INSTALLED_APPS = (
     'openquakeplatform_standalone',
 )
 
-OPENQUAKE_APPS = (
+STANDALONE_APPS = (
     'openquakeplatform_ipt',
     'openquakeplatform_taxtweb',
 )
 
-INSTALLED_APPS += OPENQUAKE_APPS
+INSTALLED_APPS += STANDALONE_APPS
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
