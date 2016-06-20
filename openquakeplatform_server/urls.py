@@ -22,6 +22,8 @@ urlpatterns = patterns('',
 )
 
 for app in STANDALONE_APPS:
+    # STANDALONE_APPS format is openquakeplatform_appname
+    # app_name is made by the token after '_' and used for suburl and namespace
     app_name = app.split('_')[1]
     urlpatterns += patterns('',
                             url(r'^%s/' % app_name, include('%s.urls' % app,
