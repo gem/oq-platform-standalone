@@ -4,8 +4,6 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 
 
-import openquakeplatform_ipt
-
 js_info_dict = {
     'domain': 'djangojs',
     'packages': ('geonode',)
@@ -22,10 +20,11 @@ urlpatterns = patterns('',
     url(r'^lang\.js$', TemplateView.as_view(template_name='lang.js', content_type='text/javascript'), name='lang'),
 
     url(r'^jsi18n/$', 'django.views.i18n.javascript_catalog',
-                                  js_info_dict, name='jscat'),
+        js_info_dict, name='jscat'),
     (r'^i18n/', include('django.conf.urls.i18n')),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^ipt/', include("openquakeplatform_ipt.urls"), name='home'),
-    url(r'^taxtweb/', include("openquakeplatform_taxtweb.urls"), name='taxtweb'),
+    url(r'^ipt/', include("openquakeplatform_ipt.urls", namespace='ipt')),
+    url(r'^taxtweb/', include("openquakeplatform_taxtweb.urls",
+                              namespace='taxtweb')),
 )
