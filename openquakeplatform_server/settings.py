@@ -29,7 +29,6 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = ["ipt-alone.gem.lan"]
 
-
 # Application definition
 
 INSTALLED_APPS = (
@@ -41,9 +40,14 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'openquakeplatform_standalone',
+)
+
+OPENQUAKE_APPS = (
     'openquakeplatform_ipt',
     'openquakeplatform_taxtweb',
 )
+
+INSTALLED_APPS += OPENQUAKE_APPS
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
