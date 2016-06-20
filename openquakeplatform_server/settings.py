@@ -42,6 +42,7 @@ INSTALLED_APPS = (
 
     'openquakeplatform_standalone',
     'openquakeplatform_ipt',
+    'openquakeplatform_taxtweb',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
