@@ -104,3 +104,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 FILE_PATH_FIELD_DIRECTORY = 'data/'
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
+
