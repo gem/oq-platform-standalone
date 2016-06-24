@@ -13,15 +13,13 @@ def oq_context_processor(request):
     context['app_list'] = []
 
     cl_list = [ 'calc', 'share', 'explore' ]
-    ct = 0
-    for app in settings.STANDALONE_APPS:
+    for ct, app in enumerate(settings.STANDALONE_APPS):
         # remove 'openquakeplatform_' suffix with slicing
         app_name = app[18:]
         appmod = import_module(app, 'header_info')
         appmod.header_info['url'] = reverse(app_name + ':home')
         appmod.header_info['class'] = cl_list[ct % 3]
         context['app_list'].append(appmod.header_info)
-        ct = ct + 1
 
     return context
 
