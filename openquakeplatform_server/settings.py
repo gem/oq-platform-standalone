@@ -42,12 +42,20 @@ INSTALLED_APPS = (
     'openquakeplatform_standalone',
 )
 
+# To be compliant the app must have
+# a 'header_info' class with title field
+# defined in __init__.py base
+#
+# I.E.
+# header_info = { "title": "IPT" }
+
+# To develop single apps add a line like:
+# STANDALONE_APPS = ('openquakeplatform_ipt',)
+# in your local_settings.py
 STANDALONE_APPS = (
     'openquakeplatform_ipt',
     'openquakeplatform_taxtweb',
 )
-
-INSTALLED_APPS += STANDALONE_APPS
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
@@ -106,8 +114,14 @@ STATIC_URL = '/static/'
 # the '/' suffix is MANDATORY
 FILE_PATH_FIELD_DIRECTORY = 'data/'
 
+TEMPLATE_CONTEXT_PROCESSORS += (
+    'openquakeplatform_standalone.utils.oq_context_processor',
+)
+
 try:
     from local_settings import *
 except ImportError:
     pass
+
+INSTALLED_APPS += STANDALONE_APPS
 
