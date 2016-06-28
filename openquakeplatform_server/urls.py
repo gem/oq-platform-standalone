@@ -12,8 +12,12 @@ js_info_dict = {
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
-    url(r'^lang\.js$', TemplateView.as_view(template_name='lang.js', content_type='text/javascript'), name='lang'),
+urlpatterns = patterns(
+    '',
+    url(r'^lang\.js$',
+        TemplateView.as_view(template_name='lang.js',
+                             content_type='text/javascript'),
+        name='lang'),
     url(r'^jsi18n/$', 'django.views.i18n.javascript_catalog',
         js_info_dict, name='jscat'),
     (r'^i18n/', include('django.conf.urls.i18n')),

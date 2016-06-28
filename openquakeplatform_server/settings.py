@@ -124,4 +124,3 @@ except ImportError:
     pass
 
 INSTALLED_APPS += STANDALONE_APPS
-
