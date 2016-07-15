@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from importlib import import_module
 
+
 def oq_context_processor(request):
     """
     A custom context processor which allows injection of additional
@@ -12,7 +13,7 @@ def oq_context_processor(request):
 
     context['app_list'] = []
 
-    cl_list = [ 'calc', 'share', 'explore' ]
+    cl_list = ['calc', 'share', 'explore']
     for ct, app in enumerate(settings.STANDALONE_APPS):
         # remove 'openquakeplatform_' suffix with slicing
         app_name = app[18:]
@@ -22,4 +23,3 @@ def oq_context_processor(request):
         context['app_list'].append(appmod.header_info)
 
     return context
-
