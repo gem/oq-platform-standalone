@@ -218,7 +218,8 @@ sig_hand () {
                 sleep 3
                 if kill -0 \$server ; then
                     kill -KILL \$server
-                fi"
+                fi
+            fi"
 
         echo "Destroying [$lxc_name] lxc"
         if [ "$LXC_DESTROY" = "lxc-destroy" ]; then
@@ -388,6 +389,14 @@ _devtest_innervm_run () {
 rem_sig_hand() {
     trap ERR
     echo 'signal trapped'
+    if [ -f /tmp/server.pid ]; then
+         server=\$(cat /tmp/server.pid)
+         kill \$server
+         sleep 3
+         if kill -0 \$server ; then
+             kill -KILL \$server
+         fi
+    fi
 }
 trap rem_sig_hand ERR
 set -e
