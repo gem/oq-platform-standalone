@@ -57,7 +57,7 @@
 # sudo sed -i  's/127.0.1.1   \+\([^ ]\+\)/127.0.1.1   \1 \1.gem.lan/g'  /etc/hosts
 # # get name from hosts
 # hname=...
-be# sed -i 's/127.0.1.1   \+\([^ ]\+\)/127.0.1.1   \1 \1.gem.lan/g'  /etc/hosts
+# sed -i 's/127.0.1.1   \+\([^ ]\+\)/127.0.1.1   \1 \1.gem.lan/g'  /etc/hosts
 # echo -e "y\ny\ny\n" | ./oq-platform/openquakeplatform/bin/deploy.sh -H $hname
 
 # export PS4='+${BASH_SOURCE}:${LINENO}:${FUNCNAME[0]}: '
@@ -179,11 +179,9 @@ copy_common () {
 }
 
 copy_dev () {
-    scp "${lxc_ip}:$GEM_GIT_PACKAGE/openquakeplatform/bootstrap.log" "out/dev_bootstrap.log" || true
-    scp "${lxc_ip}:$GEM_GIT_PACKAGE/openquakeplatform/xunit-platform-dev.xml" "out/" || true
-    scp "${lxc_ip}:$GEM_GIT_PACKAGE/openquakeplatform/dev_*.png" "out/" || true
-    scp "${lxc_ip}:$GEM_GIT_PACKAGE/openquakeplatform/runserver.log" "out/dev_runserver.log" || true
-    scp "${lxc_ip}:$GEM_GIT_PACKAGE/openquakeplatform/openquakeplatform/local_settings.py" "out/dev_local_settings.py" || true
+    scp "${lxc_ip}:$GEM_GIT_PACKAGE/xunit-platform-dev.xml" "out/" || true
+    scp "${lxc_ip}:$GEM_GIT_PACKAGE/dev_*.png" "out/" || true
+    scp "${lxc_ip}:$GEM_GIT_PACKAGE/runserver.log" "out/dev_runserver.log" || true
 }
 
 copy_prod () {
@@ -203,7 +201,7 @@ sig_hand () {
     echo "signal trapped"
     if [ "$lxc_name" != "" ]; then
         set +e
-        ssh -t  $lxc_ip "cd ~/$GEM_GIT_PACKAGE; . platform-env/bin/activate ; cd openquakeplatform ; sleep 5 ; fab stop"
+        ssh -t  $lxc_ip "cd ~/$GEM_GIT_PACKAGE; . platform-env/bin/activate"
 
         copy_common "$ACTION"
         copy_dev
@@ -377,8 +375,6 @@ rem_sig_hand() {
     if [ -z \"\$VIRTUAL_ENV\" ]; then
         . platform-env/bin/activate
     fi
-    cd openquakeplatform
-    fab stop
 }
 trap rem_sig_hand ERR
 set -e
@@ -405,15 +401,15 @@ cd ~/$GEM_GIT_PACKAGE
 pip install -e .
 
 ./runserver.sh &
-server=$!
+server=\$!
 cp openquakeplatform/test/config.py.tmpl openquakeplatform/test/config.py
 export DISPLAY=:1
 python openquakeplatform/test/nose_runner.py --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test
 sleep 3
-kill $server
+kill \$server
 sleep 3
-if kill 0 $server ; then
-    kill -KILL $server
+if kill -0 \$server ; then
+    kill -KILL \$server
 fi
 "
 
