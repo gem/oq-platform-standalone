@@ -151,7 +151,11 @@ else
         ffox_pid=\$!
         st="none"
         for i in \$(seq 1 1000) ; do
-            ffox_wins="\$(wmctrl -l | grep -i "firefox" || true)"
+            if ! wmctrl -l >/dev/null; then
+                sleep 0.1
+                continue
+            fi
+            ffox_wins="\$(export DISPLAY=:1 ; wmctrl -l | grep -i "firefox" || true)"
             if [ "\$st" = "none" ]; then
                 if echo "\$ffox_wins" | grep -qi 'update'; then
                     st="update"
