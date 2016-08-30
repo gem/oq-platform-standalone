@@ -388,10 +388,6 @@ _devtest_innervm_run () {
 rem_sig_hand() {
     trap ERR
     echo 'signal trapped'
-    cd ~/$GEM_GIT_PACKAGE
-    if [ -z \"\$VIRTUAL_ENV\" ]; then
-        . platform-env/bin/activate
-    fi
 }
 trap rem_sig_hand ERR
 set -e
