@@ -216,7 +216,7 @@ sig_hand () {
                 server=\$(cat /tmp/server.pid)
                 kill \$server
                 sleep 3
-                if kill -0 \$server ; then
+                if kill -0 \$server >/dev/null 2>&1; then
                     kill -KILL \$server
                 fi
             fi"
@@ -393,7 +393,7 @@ rem_sig_hand() {
          server=\$(cat /tmp/server.pid)
          kill \$server
          sleep 3
-         if kill -0 \$server ; then
+         if kill -0 \$server >/dev/null 2>&1; then
              kill -KILL \$server
          fi
     fi
@@ -429,10 +429,9 @@ cp openquakeplatform/test/config.py.tmpl openquakeplatform/test/config.py
 export DISPLAY=:1
 python openquakeplatform/test/nose_runner.py --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test
 sleep 3
-asdiasdiasdias
 kill \$server
 sleep 3
-if kill -0 \$server ; then
+if kill -0 \$server >/dev/null 2>&1; then
     kill -KILL \$server
 fi
 "
