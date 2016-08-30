@@ -669,7 +669,9 @@ while [ $# -gt 0 ]; do
             ;;
         prodtest)
             ACTION="$1"
-            prodtest_run $(echo "$2" | sed 's@.*/@@g')
+            # prodtest_run $(echo "$2" | sed 's@.*/@@g')
+            echo "prodtest not yet implemented"
+            exit 1
             break
             ;;
         *)
