@@ -11,7 +11,7 @@ setup(
     name='oq-platform-standalone',
     version='1.0',
 #    packages=find_packages(),
-    packages=["openquakeplatform_standalone", "openquakeplatform_server"],
+    packages=["openquakeplatform", "openquakeplatform_server"],
     include_package_data=True,
     license='BSD License',  # example license
     description='Standalone replacements for OpenQuake Platform.',

@@ -406,9 +406,9 @@ pip install -e .
 
 ./runserver.sh &
 server=$!
-cp openquakeplatform_standalone/test/config.py.tmpl openquakeplatform_standalone/test/config.py
+cp openquakeplatform/test/config.py.tmpl openquakeplatform/test/config.py
 export DISPLAY=:1
-python openquakeplatform_standalone/test/nose_runner.py --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform_standalone/test
+python openquakeplatform/test/nose_runner.py --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test
 sleep 3
 kill $server
 sleep 3
