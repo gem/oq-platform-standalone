@@ -368,7 +368,11 @@ _devtest_innervm_run () {
     ssh -t  $lxc_ip "sudo apt-get install -y python-decorator python-h5py python-psutil python-concurrent.futures python-oq-hazardlib python-oq-engine"
 
     repo_id="$GEM_GIT_REPO"
-    ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/$GEM_GIT_PACKAGE"
+    # use copy of repository instead of clone it from github, if you want it comment next 2 lines and
+    # uncomment the commented git clone line
+    ssh -t  $lxc_ip "mkdir -p $GEM_GIT_PACKAGE"
+    scp -r . "${lxc_ip}:$GEM_GIT_PACKAGE"
+    # ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/$GEM_GIT_PACKAGE"
     ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/oq-platform-ipt || git clone --depth=1 $repo_id/oq-platform-ipt"
     ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/oq-platform-taxtweb || git clone --depth=1 $repo_id/oq-platform-taxtweb"
     ssh -t  $lxc_ip "export GEM_SET_DEBUG=$GEM_SET_DEBUG
