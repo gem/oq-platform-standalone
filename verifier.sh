@@ -211,6 +211,15 @@ sig_hand () {
         copy_dev
         copy_prod
 
+        ssh -t $lxc_ip "
+            if [ -f /tmp/server.pid ]; then
+                server=\$(cat /tmp/server.pid)
+                kill \$server
+                sleep 3
+                if kill -0 \$server ; then
+                    kill -KILL \$server
+                fi"
+
         echo "Destroying [$lxc_name] lxc"
         if [ "$LXC_DESTROY" = "lxc-destroy" ]; then
             upper="$(mount | grep "${lxc_name}.*upperdir" | sed 's@.*upperdir=@@g;s@,.*@@g')"
@@ -410,10 +419,12 @@ pip install -e .
 
 ./runserver.sh &
 server=\$!
+echo "\$server" > /tmp/server.pid
 cp openquakeplatform/test/config.py.tmpl openquakeplatform/test/config.py
 export DISPLAY=:1
 python openquakeplatform/test/nose_runner.py --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test
 sleep 3
+asdiasdiasdias
 kill \$server
 sleep 3
 if kill -0 \$server ; then
