@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# packager.sh  Copyright (c) 2015, GEM Foundation.
+# packager.sh  Copyright (c) 2016, GEM Foundation.
 #
 # OpenQuake is free software: you can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License as published
@@ -611,7 +611,7 @@ cd -
 
 
 #
-#  devtest_run <branch_id> - main function of source test
+#  prodtest_run <branch_id> - main function of source test
 #      <branch_id>    name of the tested branch
 #
 prodtest_run () {
