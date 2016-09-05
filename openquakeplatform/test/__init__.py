@@ -1,7 +1,3 @@
-import time
-import sys
-import nose
-
 from openquakeplatform.test.oqplatform import Platform
 
 # uncomment to run pdb when untrapped exception is raised
