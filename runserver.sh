@@ -15,4 +15,4 @@ for i in hazardlib engine platform-standalone platform-ipt platform-taxtweb; do
     fi
 done
 echo $PYTHONPATH
-python openquakeplatform_server/bin/openquakeplatform_srv.py runserver 0.0.0.0:8000
+python openquakeplatform_server/bin/openquakeplatform_srv.py runserver 0.0.0.0:8000 >>runserver.log 2>&1

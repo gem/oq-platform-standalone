@@ -39,7 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'openquakeplatform_standalone',
+    'openquakeplatform',
 )
 
 # To be compliant the app must have
@@ -115,7 +115,7 @@ STATIC_URL = '/static/'
 FILE_PATH_FIELD_DIRECTORY = 'data/'
 
 TEMPLATE_CONTEXT_PROCESSORS += (
-    'openquakeplatform_standalone.utils.oq_context_processor',
+    'openquakeplatform.utils.oq_context_processor',
 )
 
 try:
