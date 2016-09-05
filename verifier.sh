@@ -341,15 +341,18 @@ _wait_ssh () {
 #
 #  _devtest_innervm_run <branch_id> <lxc_ip> - part of source test performed on lxc
 #                     the following activities are performed:
-#                     - extracts dependencies from oq-{engine,hazardlib, ..} debian/control
-#                       files and install them
-#                     - builds oq-hazardlib speedups
-#                     - installs oq-engine sources on lxc
-#                     - set up postgres
-#                     - upgrade db
-#                     - runs celeryd
-#                     - runs tests
-#                     - runs coverage
+#                     - update lxc packages
+#                     - install ubuntu packaged dependencies
+#                     - add openquake ppa with custom packages
+#                     - install needed custom packages
+#                     - copy the package on the LXC
+#                     - clone package plugins
+#                     - create and activate virtual environment
+#                     - install package plugins
+#                     - install package
+#                     - run server
+#                     - run tests
+#                     - stop server
 #                     - collects all tests output files from lxc
 #
 #      <branch_id>    name of the tested branch
