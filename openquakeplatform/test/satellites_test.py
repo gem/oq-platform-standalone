@@ -1,3 +1,4 @@
+import re
 import unittest
 from inspect import isclass
 
@@ -12,7 +13,9 @@ def get_checks(pkgname):
     for objname in dir(cls):
         obj = getattr(cls, objname)
         if isclass(obj) and issubclass(obj, unittest.TestCase):
-            newname = "%s__%s" % (pkgname.replace('.', '__'), objname)
+            newname = re.sub('^openquakeplatform_', '',
+                             "%s__%s" % (pkgname.replace('.', '~')))
+            newname = re.sub('__test__', '__', newname, 1)
             globals()[newname] = obj
             obj.__name__ = newname
 
