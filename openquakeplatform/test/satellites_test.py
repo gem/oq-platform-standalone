@@ -14,7 +14,7 @@ def get_checks(pkgname):
         obj = getattr(cls, objname)
         if isclass(obj) and issubclass(obj, unittest.TestCase):
             newname = re.sub('^openquakeplatform_', '',
-                             "%s__%s" % (pkgname.replace('.', '~')))
+                             "%s__%s" % (pkgname.replace('.', '__'), objname))
             newname = re.sub('__test__', '__', newname, 1)
             globals()[newname] = obj
             obj.__name__ = newname
