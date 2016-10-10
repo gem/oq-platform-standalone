@@ -27,7 +27,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = ["ipt-alone.gem.lan"]
+ALLOWED_HOSTS = ["HERE_ALLOWED_HOST" ]
 
 # Application definition
 
