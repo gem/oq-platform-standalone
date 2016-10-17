@@ -16,4 +16,4 @@ for i in oq-hazardlib oq-engine oq-platform-standalone $sa_apps_repo; do
     fi
 done
 echo $PYTHONPATH
-# python openquakeplatform_server/bin/openquakeplatform_srv.py runserver 0.0.0.0:8000 >>runserver.log 2>&1
+python openquakeplatform_server/bin/openquakeplatform_srv.py runserver 0.0.0.0:8000 >>runserver.log 2>&1
