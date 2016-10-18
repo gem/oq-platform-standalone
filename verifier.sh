@@ -311,10 +311,10 @@ usage () {
 
     echo
     echo "USAGE:"
-    echo "    $0 devtest <branch-name>"
+    echo "    $0 devtest <branch-name> [<plugins-branch-name>]"
     echo "                                                 put oq-platform sources in a lxc,"
     echo "                                                 setup environment and run development tests."
-    echo "    $0 prodtest <branch-name>"
+    echo "    $0 prodtest <branch-name> [<plugins-branch-name>]"
     echo "                                                 production installation and tests."
     echo
     exit $ret
@@ -339,7 +339,7 @@ _wait_ssh () {
 }
 
 #
-#  _devtest_innervm_run <branch_id> <lxc_ip> - part of source test performed on lxc
+#  _devtest_innervm_run <branch_id> <lxc_ip> <plugins_branch_id> - part of source test performed on lxc
 #                     the following activities are performed:
 #                     - update lxc packages
 #                     - install ubuntu packaged dependencies
@@ -357,15 +357,17 @@ _wait_ssh () {
 #
 #      <branch_id>    name of the tested branch
 #      <lxc_ip>       the IP address of lxc instance
+#      <plugins_branch_id>  name of preferred branch for plugins
 #
 _devtest_innervm_run () {
-    local i old_ifs pkgs_list dep branch_id="$1" lxc_ip="$2"
-
+    local i old_ifs pkgs_list dep branch_id="$1" lxc_ip="$2" plugins_branch_id="$3"
+    local sa_apps
     trap 'local LASTERR="$?" ; trap ERR ; (exit $LASTERR) ; return' ERR
 
     scp .gem_init.sh ${lxc_ip}:
     scp .gem_ffox_init.sh ${lxc_ip}:
 
+    sa_apps="$(python -c "from openquakeplatform_server.settings import STANDALONE_APPS ; print(' '.join(STANDALONE_APPS))")"
     # build oq-hazardlib speedups and put in the right place
     ssh -t  $lxc_ip "source .gem_init.sh"
 
@@ -384,9 +386,16 @@ _devtest_innervm_run () {
     # uncomment the commented git clone line
     ssh -t  $lxc_ip "mkdir -p $GEM_GIT_PACKAGE"
     scp -r . "${lxc_ip}:$GEM_GIT_PACKAGE"
-    # ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/$GEM_GIT_PACKAGE"
-    ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/oq-platform-ipt || git clone --depth=1 $repo_id/oq-platform-ipt"
-    ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/oq-platform-taxtweb || git clone --depth=1 $repo_id/oq-platform-taxtweb"
+    for app in $sa_apps; do
+        app_repo="$(echo "$app" | sed 's/^openquakeplatform_/oq-platform-/g')"
+
+        # ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/$GEM_GIT_PACKAGE"
+        if [ "$plugins_branch_id" ]; then
+            plugins_pfx="git clone --depth=1 -b $plugins_branch_id $repo_id/$app_repo || "
+        fi
+
+        ssh -t  $lxc_ip "${plugins_pfx}git clone --depth=1 -b $branch_id $repo_id/${app_repo} || git clone --depth=1 $repo_id/${app_repo}"
+    done
     ssh -t  $lxc_ip "export GEM_SET_DEBUG=$GEM_SET_DEBUG
 rem_sig_hand() {
     trap ERR
@@ -493,7 +502,11 @@ _lxc_name_and_ip_get()
 #      <branch_id>    name of the tested branch
 #
 devtest_run () {
-    local deps old_ifs branch_id="$1"
+    local deps old_ifs branch_id="$1" plugins_branch_id="$2"
+
+    if [ "$branch_id" = "$plugins_branch_id" ]; then
+        plugins_branch_id=""
+    fi
 
     sudo echo
     sudo ${GEM_EPHEM_EXE} 2>&1 | tee /tmp/packager.eph.$$.log &
@@ -502,7 +515,7 @@ devtest_run () {
 
     _wait_ssh $lxc_ip
     set +e
-    _devtest_innervm_run "$branch_id" "$lxc_ip"
+    _devtest_innervm_run "$branch_id" "$lxc_ip" "$plugins_branch_id"
     inner_ret=$?
 
     copy_common dev
@@ -665,13 +678,13 @@ while [ $# -gt 0 ]; do
         devtest)
             ACTION="$1"
             # Sed removes 'origin/' from the branch name
-            devtest_run $(echo "$2" | sed 's@.*/@@g')
+            devtest_run $(echo "$2" | sed 's@.*/@@g') "$3"
             exit $?
             break
             ;;
         prodtest)
             ACTION="$1"
-            # prodtest_run $(echo "$2" | sed 's@.*/@@g')
+            # prodtest_run $(echo "$2" | sed 's@.*/@@g') "$3"
             echo "prodtest not yet implemented"
             exit 1
             break
