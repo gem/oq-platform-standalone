@@ -367,7 +367,7 @@ _devtest_innervm_run () {
     scp .gem_init.sh ${lxc_ip}:
     scp .gem_ffox_init.sh ${lxc_ip}:
 
-    sa_apps="$(python -c "from openquakeplatform_server.settings import STANDALONE_APPS ; print('\n'.join(STANDALONE_APPS))")"
+    sa_apps="$(python -c "from openquakeplatform_server.settings import STANDALONE_APPS ; print(' '.join(STANDALONE_APPS))")"
     # build oq-hazardlib speedups and put in the right place
     ssh -t  $lxc_ip "source .gem_init.sh"
 
@@ -386,8 +386,6 @@ _devtest_innervm_run () {
     # uncomment the commented git clone line
     ssh -t  $lxc_ip "mkdir -p $GEM_GIT_PACKAGE"
     scp -r . "${lxc_ip}:$GEM_GIT_PACKAGE"
-    IFS='
-'
     for app in $sa_apps; do
         app_repo="$(echo "$app" | sed 's/^openquakeplatform_/oq-platform-/g')"
 
