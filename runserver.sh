@@ -3,9 +3,7 @@ function abs_path {
   (cd "$1" &>/dev/null && printf "%s" "$PWD")
 }
 
-sa_apps_repo="$(python -c "from openquakeplatform_server.settings import STANDALONE_APPS ; print('\n'.join(STANDALONE_APPS))" | sed 's/openquakeplatform_/oq-platform-/g' )"
-IFS='
-'
+sa_apps_repo="$(python -c "from openquakeplatform_server.settings import STANDALONE_APPS ; print(' '.join(STANDALONE_APPS))" | sed 's/openquakeplatform_/oq-platform-/g' )"
 for i in oq-hazardlib oq-engine oq-platform-standalone $sa_apps_repo; do
     abs="$(abs_path "${PWD}/../${i}")"
     if [ ! -d "$abs" ]; then
