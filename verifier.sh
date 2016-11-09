@@ -485,7 +485,7 @@ devtest_run () {
     local deps old_ifs branch_id="$1"
 
     sudo echo
-    if [ "$GEM_EPHEM_EXE" == "$GEM_EPHEM_NAME" ]; then
+    if [ "$GEM_EPHEM_EXE" = "$GEM_EPHEM_NAME" ]; then
         _lxc_name_and_ip_get
     else
         sudo ${GEM_EPHEM_EXE} 2>&1 | tee /tmp/packager.eph.$$.log &
@@ -613,7 +613,7 @@ prodtest_run () {
     local deps old_ifs branch_id="$1"
 
     sudo echo
-    if [ "$GEM_EPHEM_EXE" == "$GEM_EPHEM_NAME" ]; then
+    if [ "$GEM_EPHEM_EXE" = "$GEM_EPHEM_NAME" ]; then
         _lxc_name_and_ip_get
     else
         sudo ${GEM_EPHEM_EXE} 2>&1 | tee /tmp/packager.eph.$$.log &
