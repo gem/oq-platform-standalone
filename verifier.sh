@@ -41,7 +41,7 @@
 #
 # - exports:
 # export GEM_EPHEM_NAME='<lxc-machine-name>'
-# export GEM_EPHEM_DESTROY='echo Not destroy'
+# export GEM_EPHEM_DESTROY='false'
 # export GEM_EPHEM_EXE='<lxc-machine-name>'
 #
 # run ./verifier.sh prodtest <your-branch-name>
@@ -103,7 +103,7 @@ fi
 if [ "$GEM_EPHEM_DESTROY" != "" ]; then
     LXC_DESTROY="$GEM_EPHEM_DESTROY"
 else
-    LXC_DESTROY="lxc-destroy"
+    LXC_DESTROY="true"
 fi
 
 ACTION="none"
@@ -213,7 +213,7 @@ sig_hand () {
             fi"
 
         echo "Destroying [$lxc_name] lxc"
-        if [ "$LXC_DESTROY" = "lxc-destroy" ]; then
+        if [ "$LXC_DESTROY" = "true" ]; then
             sudo $LXC_KILL -n $lxc_name
         fi
     fi
@@ -498,7 +498,7 @@ devtest_run () {
         ssh -t  $lxc_ip "cd ~/$GEM_GIT_PACKAGE; . platform-env/bin/activate ; killall runserver.sh"
     fi
 
-    if [ "$LXC_DESTROY" = "lxc-destroy" ]; then
+    if [ "$LXC_DESTROY" = "true" ]; then
         sudo $LXC_TERM -n $lxc_name
     fi
 
@@ -627,7 +627,7 @@ prodtest_run () {
         :
     fi
 
-    if [ "$LXC_DESTROY" = "lxc-destroy" ]; then
+    if [ "$LXC_DESTROY" = "true" ]; then
         sudo $LXC_TERM -n $lxc_name
     fi
 
