@@ -83,9 +83,6 @@ GEM_MAXLOOP=20
 
 GEM_ALWAYS_YES=false
 
-if [ "$GEM_EPHEM_CMD" = "" ]; then
-    GEM_EPHEM_CMD="lxc-start-ephemeral"
-fi
 if [ "$GEM_EPHEM_NAME" = "" ]; then
     GEM_EPHEM_NAME="ubuntu14-x11-lxc-eph"
 fi
