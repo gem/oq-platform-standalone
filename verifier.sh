@@ -37,15 +37,12 @@
 # you can use verifier.sh to install a permanent LXC machine
 #
 # to do it:
+# - create and run a new lxc of the same serie used here
 #
-# - copy openquakeplatform/bin/lxc-* to your /usr/local/sbin
-#
-# - set these env variables (change <lxc-machine-name> with your m. name)
-#
-# export GEM_EPHEM_IP_GET=lxc-ip-get-gem
-# export GEM_EPHEM_NAME=<lxc-machine-name>
-# export GEM_EPHEM_DESTROY=echo lxc-destroy-fake
-# export GEM_EPHEM_CMD=lxc-start-gem
+# - exports:
+# export GEM_EPHEM_NAME='<lxc-machine-name>'
+# export GEM_EPHEM_DESTROY='echo Not destroy'
+# export GEM_EPHEM_EXE='<lxc-machine-name>'
 #
 # run ./verifier.sh prodtest <your-branch-name>
 
