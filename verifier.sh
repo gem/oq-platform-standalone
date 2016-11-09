@@ -95,7 +95,7 @@ LXC_TERM="lxc-stop -t 10"
 LXC_KILL="lxc-stop -k"
 
 if [ "$GEM_EPHEM_EXE" != "" ]; then
-    echo "Use [$GEM_EPHEM_EXE] to run lxc"
+    echo "Using [$GEM_EPHEM_EXE] to run lxc"
 else
     GEM_EPHEM_EXE="lxc-copy -n ${GEM_EPHEM_NAME} -e"
 fi
