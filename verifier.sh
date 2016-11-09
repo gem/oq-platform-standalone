@@ -485,9 +485,13 @@ devtest_run () {
     local deps old_ifs branch_id="$1"
 
     sudo echo
-    sudo ${GEM_EPHEM_EXE} 2>&1 | tee /tmp/packager.eph.$$.log &
-    _lxc_name_and_ip_get /tmp/packager.eph.$$.log
-    rm /tmp/packager.eph.$$.log
+    if [ "$GEM_EPHEM_EXE" == "$GEM_EPHEM_NAME" ]; then
+        _lxc_name_and_ip_get
+    else
+        sudo ${GEM_EPHEM_EXE} 2>&1 | tee /tmp/packager.eph.$$.log &
+        _lxc_name_and_ip_get /tmp/packager.eph.$$.log
+        rm /tmp/packager.eph.$$.log
+    fi
 
     _wait_ssh $lxc_ip
     set +e
@@ -609,9 +613,13 @@ prodtest_run () {
     local deps old_ifs branch_id="$1"
 
     sudo echo
-    sudo ${GEM_EPHEM_EXE} 2>&1 | tee /tmp/packager.eph.$$.log &
-    _lxc_name_and_ip_get /tmp/packager.eph.$$.log
-    rm /tmp/packager.eph.$$.log
+    if [ "$GEM_EPHEM_EXE" == "$GEM_EPHEM_NAME" ]; then
+        _lxc_name_and_ip_get
+    else
+        sudo ${GEM_EPHEM_EXE} 2>&1 | tee /tmp/packager.eph.$$.log &
+        _lxc_name_and_ip_get /tmp/packager.eph.$$.log
+        rm /tmp/packager.eph.$$.log
+    fi
 
     _wait_ssh $lxc_ip
     set +e
