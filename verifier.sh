@@ -216,7 +216,6 @@ sig_hand () {
         if [ "$LXC_DESTROY" = "lxc-destroy" ]; then
             sudo $LXC_KILL -n $lxc_name
         fi
-        sudo $LXC_DESTROY -n $lxc_name
     fi
     if [ -f /tmp/packager.eph.$$.log ]; then
         rm /tmp/packager.eph.$$.log
