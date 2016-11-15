@@ -372,7 +372,7 @@ except ImportError:
     # use copy of repository instead of clone it from github, if you want it comment next 2 lines and
     # uncomment the commented git clone line
     ssh -t  $lxc_ip "mkdir -p $GEM_GIT_PACKAGE"
-    scp -r . "${lxc_ip}:$GEM_GIT_PACKAGE"
+    scp -r * "${lxc_ip}:$GEM_GIT_PACKAGE"
     sa_apps="$sa_apps oq-moon"
     for app in $sa_apps; do
         app_repo="$(echo "$app" | sed 's/^openquakeplatform_/oq-platform-/g')"
