@@ -349,6 +349,8 @@ _devtest_innervm_run () {
 
     ssh -t  $lxc_ip "sudo apt-get update"
     ssh -t  $lxc_ip "sudo apt-get -y upgrade"
+    ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-latest-linux64.tar.gz ; tar zxvf geckodriver-latest-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
+    ssh -t  $lxc_ip "sudo pip install -U selenium==3.0.1"
 
     ssh -t  $lxc_ip "sudo apt-get install -y build-essential python-dev python-imaging python-virtualenv git libxml2 libxml2-dev libxslt1-dev libxslt1.1 libblas-dev liblapack-dev curl wget xmlstarlet imagemagick gfortran python-nose libgeos-dev python-software-properties"
     ssh -t  $lxc_ip "sudo add-apt-repository -y ppa:openquake-automatic-team/latest-master"
@@ -410,9 +412,10 @@ pip install -e .
 ./runserver.sh &
 server=\$!
 echo "\$server" > /tmp/server.pid
-cp openquakeplatform/test/config.py.tmpl openquakeplatform/test/config.py
+cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
+export PYTHONPATH=\$(pwd):\$(pwd)/openquakeplatform/test/config
 export DISPLAY=:1
-python openquakeplatform/test/nose_runner.py --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test
+python -m openquake.moon.nose_runner --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test
 sleep 3
 kill \$server
 sleep 3
@@ -597,10 +600,10 @@ cd oq-platform/openquakeplatform
 # add a simulated qgis uploaded layer
 ./openquakeplatform/bin/simqgis-layer-up.sh --sitename "http://oq-platform.localdomain"
 
-export PYTHONPATH=\$(pwd)
-sed 's@^pla_basepath *= *\"http://localhost:8000\"@pla_basepath = \"http://oq-platform.localdomain\"@g' openquakeplatform/test/config.py.tmpl > openquakeplatform/test/config.py
+export PYTHONPATH=\$(pwd):\$(pwd)/openquakeplatform/test/config
+sed 's@^pla_basepath *= *\"http://localhost:8000\"@pla_basepath = \"http://oq-platform.localdomain\"@g' openquakeplatform/test/config/moon_config.py.tmpl > openquakeplatform/test/config/moon_config.py
 export DISPLAY=:1
-python openquakeplatform/test/nose_runner.py --failurecatcher prod -v --with-xunit --xunit-file=xunit-platform-prod.xml  openquakeplatform/test
+python -m openquake.moon.nose_runner --failurecatcher prod -v --with-xunit --xunit-file=xunit-platform-prod.xml  openquakeplatform/test
 sleep 3
 cd -
 "
