@@ -136,6 +136,7 @@ else
 
     if [ "\$ffox_cur" != "\$ffox_can" ]; then
         echo "WARNING: firefox has been upgraded, run it to accomplish update operations"
+        # use this parameter to avoid blocks with sudoers updates '-o Dpkg::Options::=--force-confdef'
         sudo apt-get -y upgrade
         sudo apt-get -y install wmctrl
         export DISPLAY=:1
@@ -348,6 +349,7 @@ _devtest_innervm_run () {
     ssh -t  $lxc_ip "rm -f ssh.log"
 
     ssh -t  $lxc_ip "sudo apt-get update"
+    # use this parameter to avoid blocks with sudoers updates: '-o Dpkg::Options::=--force-confdef'
     ssh -t  $lxc_ip "sudo apt-get -y upgrade"
     ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-latest-linux64.tar.gz ; tar zxvf geckodriver-latest-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
     ssh -t  $lxc_ip "sudo pip install -U selenium==3.0.1"
@@ -357,11 +359,21 @@ _devtest_innervm_run () {
     ssh -t  $lxc_ip "sudo apt-get update"
     ssh -t  $lxc_ip "sudo apt-get install -y python-oq-hazardlib python-oq-engine"
 
+    # to allow mixed openquake packages installation (from packages and from sources) an 'ad hoc' __init__.py injection.
+    ssh -t  $lxc_ip "sudo echo \"try:
+    __import__('pkg_resources').declare_namespace(__name__)
+except ImportError:
+    __path__ = __import__('pkgutil').extend_path(__path__, __name__)\" > /tmp/new_init.py ;
+    init_file=\"\$(python -c 'import openquake ; print openquake.__path__[0]')/__init__.py\" ;
+    sudo cp /tmp/new_init.py \"\${init_file}\" ;
+    sudo python -m py_compile \"\${init_file}\" "
+
     repo_id="$GEM_GIT_REPO"
     # use copy of repository instead of clone it from github, if you want it comment next 2 lines and
     # uncomment the commented git clone line
     ssh -t  $lxc_ip "mkdir -p $GEM_GIT_PACKAGE"
     scp -r . "${lxc_ip}:$GEM_GIT_PACKAGE"
+    sa_apps="$sa_apps oq-moon"
     for app in $sa_apps; do
         app_repo="$(echo "$app" | sed 's/^openquakeplatform_/oq-platform-/g')"
 
@@ -413,7 +425,7 @@ pip install -e .
 server=\$!
 echo "\$server" > /tmp/server.pid
 cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
-export PYTHONPATH=\$(pwd):\$(pwd)/openquakeplatform/test/config
+export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
 export DISPLAY=:1
 python -m openquake.moon.nose_runner --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test
 sleep 3
