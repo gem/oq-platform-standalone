@@ -136,7 +136,7 @@ else
 
     if [ "\$ffox_cur" != "\$ffox_can" ]; then
         echo "WARNING: firefox has been upgraded, run it to accomplish update operations"
-        # use this parameter to avoid blocks with sudoers updates '-o Dpkg::Options::=--force-confdef'
+        # use this parameter to avoid blocks with sudoers updates: '-o Dpkg::Options::=--force-confdef'
         sudo apt-get -y upgrade
         sudo apt-get -y install wmctrl
         export DISPLAY=:1
