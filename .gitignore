@@ -3,3 +3,6 @@
 *.sqlite3
 /openquakeplatform_server/local_settings.py
 /data
+# Setuptool stuff
+/build
+/dist
