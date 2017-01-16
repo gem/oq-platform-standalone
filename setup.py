@@ -20,6 +20,11 @@ setup(
     author='GEM Foundation',
     author_email='devops@openquake.org',
     scripts=['openquakeplatform_server/bin/openquakeplatform_srv.py'],
+    install_requires = [
+        'django >=1.6, <1.11',
+        'openquake.engine',
+        'openquake.hazardlib',
+    ]
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
