@@ -7,12 +7,12 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
+import os
 
 # Standalone flag to differentiate behaviors
 STANDALONE = True
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -27,7 +27,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1" ]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 # Application definition
 
@@ -112,7 +112,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # the '/' suffix is MANDATORY
-FILE_PATH_FIELD_DIRECTORY = os.path.expanduser("~/oqdata/")
+FILE_PATH_FIELD_DIRECTORY = os.path.join(os.path.expanduser('~'), 'oqdata')
 
 TEMPLATE_CONTEXT_PROCESSORS += (
     'openquakeplatform.utils.oq_context_processor',
