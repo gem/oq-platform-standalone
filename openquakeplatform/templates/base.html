@@ -70,8 +70,7 @@
 
     {% block extra_script %}{% endblock extra_script %}
 
-    <script type="text/javascript" src="{% url "django.views.i18n.javascript_catalog" %}"></script>
-    <script type="text/javascript" src="{% url "lang" %}"></script>
+    <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
     <style type="text/css">
       .select2-drop{
         color: black;
