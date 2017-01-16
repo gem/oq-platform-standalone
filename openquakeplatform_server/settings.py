@@ -112,7 +112,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # the '/' suffix is MANDATORY
-FILE_PATH_FIELD_DIRECTORY = 'data/'
+FILE_PATH_FIELD_DIRECTORY = os.path.expanduser("~/oqdata/")
 
 TEMPLATE_CONTEXT_PROCESSORS += (
     'openquakeplatform.utils.oq_context_processor',
