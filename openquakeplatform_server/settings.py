@@ -27,7 +27,7 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# This ugly hack is needed because in verifiers we are importing
+# This ugly hack is needed because in verifier.sh we are importing
 # this file on the host and without Django installed to get INSTALLED_APPS
 try:
     from django import get_version
