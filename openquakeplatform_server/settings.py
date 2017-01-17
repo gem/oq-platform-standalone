@@ -8,6 +8,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 import os
+from django import get_version
+from distutils.version import StrictVersion
 
 # Standalone flag to differentiate behaviors
 STANDALONE = True
@@ -26,40 +28,40 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                # 'django.contrib.auth.context_processors.auth',
-                'django.template.context_processors.request',
-                'django.template.context_processors.debug',
-                'django.template.context_processors.i18n',
-                'django.template.context_processors.media',
-                'django.template.context_processors.static',
-                'django.template.context_processors.tz',
-                # 'django.contrib.messages.context_processors.messages',
-                'openquakeplatform.utils.oq_context_processor',
-            ],
+if StrictVersion(get_version()) < StrictVersion('1.8'):
+    # For backward compatibility with Django < 1.8
+    # Be aware that names are different (template -> core)
+    TEMPLATE_CONTEXT_PROCESSORS = (
+        'django.contrib.auth.context_processors.auth',
+        'django.core.context_processors.debug',
+        'django.core.context_processors.i18n',
+        'django.core.context_processors.tz',
+        'django.core.context_processors.media',
+        'django.core.context_processors.static',
+        'django.core.context_processors.request',
+        'django.contrib.messages.context_processors.messages',
+        'openquakeplatform.utils.oq_context_processor',
+    )
+else:
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    # 'django.contrib.auth.context_processors.auth',
+                    'django.template.context_processors.request',
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.i18n',
+                    'django.template.context_processors.media',
+                    'django.template.context_processors.static',
+                    'django.template.context_processors.tz',
+                    # 'django.contrib.messages.context_processors.messages',
+                    'openquakeplatform.utils.oq_context_processor',
+                ],
+            },
         },
-    },
-]
-
-# For backward compatibility with Django 1.5
-# Be aware that names are different (template -> core)
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.tz',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'django.core.context_processors.request',
-    'django.contrib.messages.context_processors.messages',
-    'openquakeplatform.utils.oq_context_processor',
-)
+    ]
 
 # Application definition
 INSTALLED_APPS = (
