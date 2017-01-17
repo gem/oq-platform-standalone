@@ -32,8 +32,8 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.core.context_processors.request',
                 # 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.request',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.media',
@@ -45,6 +45,21 @@ TEMPLATES = [
         },
     },
 ]
+
+# For backward compatibility with Django 1.5
+# Be aware that names are different (template -> core)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.tz',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages',
+    'openquakeplatform.utils.oq_context_processor',
+)
 
 # Application definition
 INSTALLED_APPS = (
@@ -72,7 +87,6 @@ STANDALONE_APPS = (
     'openquakeplatform_ipt',
     'openquakeplatform_taxtweb',
 )
-
 
 MIDDLEWARE_CLASSES = (
     # 'django.contrib.sessions.middleware.SessionMiddleware',
@@ -103,7 +117,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
