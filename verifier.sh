@@ -410,14 +410,8 @@ source platform-env/bin/activate
 if dpkg -l python-simplejson 2>/dev/null | tail -n +6 | grep -q '^ii '; then
     pip install simplejson==2.0.9
 fi
-cd -
-cd oq-platform-ipt
-sudo python setup.py install
-cd -
-cd oq-platform-taxtweb
-sudo python setup.py install
-cd -
-cd ~/$GEM_GIT_PACKAGE
+pip install -e ../oq-platform-ipt/
+pip install -e ../oq-platform-taxtweb/
 
 pip install -e .
 
