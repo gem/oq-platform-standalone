@@ -22,8 +22,6 @@ setup(
     scripts=['openquakeplatform_server/bin/openquakeplatform_srv.py'],
     install_requires=[
         'django >=1.5, <1.11',
-        'openquake.engine',
-        'openquake.hazardlib',
     ],
     classifiers=[
         'Environment :: Web Environment',
