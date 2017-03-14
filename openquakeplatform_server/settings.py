@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 import os
 
+WEBUIURL = 'http://localhost:8800/'
 
 # Standalone flag to differentiate behaviors
 STANDALONE = True
