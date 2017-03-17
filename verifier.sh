@@ -413,6 +413,7 @@ if dpkg -l python-simplejson 2>/dev/null | tail -n +6 | grep -q '^ii '; then
 fi
 pip install -e ../oq-platform-ipt/
 pip install -e ../oq-platform-taxtweb/
+pip install -e ../oq-platform-taxonomy/
 
 pip install -e .
 
@@ -579,6 +580,7 @@ _prodtest_innervm_run () {
     ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/$GEM_GIT_PACKAGE"
     ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/oq-platform-ipt || git clone --depth=1 $repo_id/oq-platform-ipt"
     ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/oq-platform-taxtweb || git clone --depth=1 $repo_id/oq-platform-taxtweb"
+    ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/oq-platform-taxonomy || git clone --depth=1 $repo_id/oq-platform-taxonomy"
     ssh -t  $lxc_ip "export GEM_SET_DEBUG=$GEM_SET_DEBUG
 rem_sig_hand() {
     trap ERR
@@ -597,6 +599,11 @@ cd -
 
 # install taxtweb
 cd oq-platform-taxtweb
+sudo pip install . -U --no-deps
+cd -
+
+# install taxonomy
+cd oq-platform-taxonomy
 sudo pip install . -U --no-deps
 cd -
 
