@@ -425,6 +425,7 @@ export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/conf
 export DISPLAY=:1
 python -m openquake.moon.nose_runner --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test
 sleep 3
+sleep 40000 || true
 kill \$server
 sleep 3
 if kill -0 \$server >/dev/null 2>&1; then
