@@ -423,7 +423,7 @@ echo "\$server" > /tmp/server.pid
 cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
 export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
 export DISPLAY=:1
-python -m openquake.moon.nose_runner --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test
+python -m openquake.moon.nose_runner --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test || true
 sleep 3
 sleep 40000 || true
 kill \$server
