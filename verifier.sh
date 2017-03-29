@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 #
 # verifier.sh  Copyright (c) 2016, GEM Foundation.
 #
