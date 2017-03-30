@@ -413,6 +413,7 @@ if dpkg -l python-simplejson 2>/dev/null | tail -n +6 | grep -q '^ii '; then
 fi
 pip install -e ../oq-platform-ipt/
 pip install -e ../oq-platform-taxtweb/
+pip install -e ../oq-platform-taxonomy/
 
 pip install -e .
 
@@ -422,8 +423,9 @@ echo "\$server" > /tmp/server.pid
 cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
 export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
 export DISPLAY=:1
-python -m openquake.moon.nose_runner --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test
+python -m openquake.moon.nose_runner --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test # || true
 sleep 3
+# sleep 40000 || true
 kill \$server
 sleep 3
 if kill -0 \$server >/dev/null 2>&1; then
@@ -579,6 +581,7 @@ _prodtest_innervm_run () {
     ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/$GEM_GIT_PACKAGE"
     ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/oq-platform-ipt || git clone --depth=1 $repo_id/oq-platform-ipt"
     ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/oq-platform-taxtweb || git clone --depth=1 $repo_id/oq-platform-taxtweb"
+    ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/oq-platform-taxonomy || git clone --depth=1 $repo_id/oq-platform-taxonomy"
     ssh -t  $lxc_ip "export GEM_SET_DEBUG=$GEM_SET_DEBUG
 rem_sig_hand() {
     trap ERR
@@ -600,12 +603,17 @@ cd oq-platform-taxtweb
 sudo pip install . -U --no-deps
 cd -
 
+# install taxonomy
+cd oq-platform-taxonomy
+sudo pip install . -U --no-deps
+cd -
+
 echo -e \"y\ny\ny\n\" | oq-platform/openquakeplatform/bin/deploy.sh --hostname oq-platform.localdomain
 
 cd oq-platform/openquakeplatform
 
 # add a simulated qgis uploaded layer
-./openquakeplatform/bin/simqgis-layer-up.sh --sitename "http://oq-platform.localdomain"
+./openquakeplatform/bin/simqgis-layer-up.sh --sitename \"http://oq-platform.localdomain\"
 
 export PYTHONPATH=\$(pwd):\$(pwd)/openquakeplatform/test/config
 sed 's@^pla_basepath *= *\"http://localhost:8000\"@pla_basepath = \"http://oq-platform.localdomain\"@g' openquakeplatform/test/config/moon_config.py.tmpl > openquakeplatform/test/config/moon_config.py

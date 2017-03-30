@@ -1,5 +1,5 @@
 """
-Django settings for oq_ipt project.
+Django settings for oq_platform_standalone project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -96,6 +96,7 @@ INSTALLED_APPS = (
 STANDALONE_APPS = (
     'openquakeplatform_ipt',
     'openquakeplatform_taxtweb',
+    'openquakeplatform_taxonomy',
 )
 
 MIDDLEWARE_CLASSES = (
