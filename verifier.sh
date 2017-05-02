@@ -352,8 +352,9 @@ _devtest_innervm_run () {
     ssh -t  $lxc_ip "sudo apt-get update"
     # use this parameter to avoid blocks with sudoers updates: '-o Dpkg::Options::=--force-confdef'
     ssh -t  $lxc_ip "sudo apt-get -y upgrade"
-    ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-latest-linux64.tar.gz ; tar zxvf geckodriver-latest-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
-    ssh -t  $lxc_ip "sudo pip install -U selenium==3.0.1"
+#     ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-latest-linux64.tar.gz ; tar zxvf geckodriver-latest-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
+    ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-v0.16.1-linux64.tar.gz ; tar zxvf geckodriver-v0.16.1-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
+    ssh -t  $lxc_ip "sudo pip install -U selenium==3.4.1"
 
     ssh -t  $lxc_ip "sudo apt-get install -y build-essential python-dev python-imaging python-virtualenv git libxml2 libxml2-dev libxslt1-dev libxslt1.1 libblas-dev liblapack-dev curl wget xmlstarlet imagemagick gfortran python-nose libgeos-dev python-software-properties"
     ssh -t  $lxc_ip "sudo add-apt-repository -y ppa:openquake-automatic-team/latest-master"
