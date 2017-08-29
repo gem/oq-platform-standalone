@@ -4,7 +4,7 @@ pla = Moon()
 pla.primary_set()
 
 def setup_package():
-    pla.init()
+    pla.init(autologin=False)
 
 def teardown_package():
     pla.fini()
