@@ -1,40 +1,34 @@
 {% load i18n %}
-
-{% comment "Warining: also 500.html contains this code" %}
-    # When this code is modified the 500.html template must be updated
-    # accordingly since it includes a (partial) copy of this code
-{% endcomment %}
-
-    <div id="header" class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <section>
-        <div class="container">
-          <div class="row">
-            <div class="span3">
-              <span class="nav-logo"></span>
-            </div>
-            <div class="span10">
-              <nav class="main-nav">
-                <ul>
-                  {% block extra-nav %}
-                  {% include "includes/extra-nav.html" %}
-                  {% endblock %}
+  <div id="header" class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <section>
+      <div class="container">
+        <div class="row">
+          <div class="span3">
+            <span class="nav-logo"></span>
+          </div>
+          <div class="span10">
+            <nav class="main-nav">
+              <ul>
+                {% block extra-nav %}
+                {% include "includes/extra-nav.html" %}
+                {% endblock %}
+              </ul>
+            </nav>
+          </div> <!-- ./span10 -->
+          <div class="span9">
+            <div class="nav-collapse pull-right">
+              <div class="pull-right">
+                <ul class="nav pull-right account-bar">
                 </ul>
-              </nav>
-            </div> <!-- ./span10 -->
-            <div class="span9">
-              <div class="nav-collapse pull-right">
-                <div class="pull-right">
-                  <ul class="nav pull-right account-bar">
-                  </ul>
-                </div>
               </div>
             </div>
-            <div id="gem-right-logo">
-              <a href="http://www.globalquakemodel.org" title="GEM Foundation" target="_blank"><span class="nav-logo nav-logo-gem"></span></a>
-            </div>
           </div>
-        </div> <!-- /.container -->
-        </section>
-      </div> <!-- /.navbar-inner -->
-    </div> <!-- /.navbar navbar-fixed-top -->
+          <div id="gem-right-logo">
+            <a href="http://www.globalquakemodel.org" title="GEM Foundation" target="_blank"><span class="nav-logo nav-logo-gem"></span></a>
+          </div>
+        </div>
+      </div> <!-- /.container -->
+      </section>
+    </div> <!-- /.navbar-inner -->
+  </div> <!-- /.navbar navbar-fixed-top -->
