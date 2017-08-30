@@ -1,3 +1,6 @@
+{%if oq_engine_version %}
+<li class="calc"><a href="{% url 'index' %}">Engine</a></li>
+{% endif %}
 {% for app in app_list %}
 <li class="{{ app.class }}"><a href="{{ app.url }}">{{ app.title }}</a></li>
 {% endfor %}
