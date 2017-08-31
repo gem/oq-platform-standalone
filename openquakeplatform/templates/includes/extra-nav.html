@@ -1,4 +1,4 @@
-{%if oq_engine_version and gem_oq_irmt_qgis_version == None %}
+{%if oq_engine_version %}
 <li class="engine"><a href="{% url 'index' %}">Engine</a></li>
 {% endif %}
 {% for app in app_list %}

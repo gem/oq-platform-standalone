@@ -22,8 +22,9 @@ def oq_context_processor(request):
         appmod.header_info['class'] = cl_list[ct % 3]
         context['app_list'].append(appmod.header_info)
 
+    # FIXME should not depend on IPT but on a generic header
     if 'HTTP_GEM__OQ_IRMT_QGIS__IPT' in request.META:
         oq_irmt_qgis = request.META['HTTP_GEM__OQ_IRMT_QGIS__IPT']
-        context['gem_oq_irmt_qgis_version'] = oq_irmt_qgis
+        context['gem_oq_irmt_qgis'] = oq_irmt_qgis
 
     return context
