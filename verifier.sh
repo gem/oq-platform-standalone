@@ -408,6 +408,9 @@ oq webui start -s &> runserver.log &
 server=\$!
 echo "\$server" > /tmp/server.pid
 
+# FIXME
+sleep 10
+
 cd $GEM_GIT_PACKAGE
 cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
 export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
