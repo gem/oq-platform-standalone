@@ -23,8 +23,8 @@ def oq_context_processor(request):
         context['app_list'].append(appmod.header_info)
 
     for k in request.META:
-        if k.startswith('HTTP_GEM__OQ_IRMT_QGIS'):
-            context['gem_oq_irmt_qgis'] = True
+        if k.startswith('HTTP_GEM__QGIS'):
+            context['gem_qgis'] = True
             break
 
     return context

@@ -23,7 +23,7 @@
   </head>
   <body class="{% block body_class %}{% endblock %}">
     {% block header %}
-    {%if gem_oq_irmt_qgis == None %}
+    {%if gem_qgis == None %}
     {% include "includes/header.html" %}
     {% endif %}
     {% endblock header %}
@@ -49,7 +49,7 @@
     {% endblock middle %}
 
     {% block footer %}
-    {%if gem_oq_irmt_qgis == None %}
+    {%if gem_qgis == None %}
     {% include "includes/footer.html" %}
     {% endif %}
     {% endblock footer %}
