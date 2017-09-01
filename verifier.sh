@@ -355,7 +355,6 @@ _devtest_innervm_run () {
     ssh -t  $lxc_ip "sudo apt-get install -y python-virtualenv python-pip git"
     # ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-latest-linux64.tar.gz ; tar zxvf geckodriver-latest-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
     ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-v0.16.1-linux64.tar.gz ; tar zxvf geckodriver-v0.16.1-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
-    ssh -t  $lxc_ip "sudo pip install -U selenium==3.4.1"
 
     repo_id="$GEM_GIT_REPO"
     # use copy of repository instead of clone it from github, if you want it comment next 2 lines and
@@ -394,6 +393,7 @@ fi
 virtualenv env
 source env/bin/activate
 pip install -U pip
+pip install -U selenium==3.4.1
 pip install -r oq-engine/requirements-py27-linux64.txt
 pip install -e oq-engine/
 # FIXME Installation should be done without '-e' to test setup.py and MANIFEST
