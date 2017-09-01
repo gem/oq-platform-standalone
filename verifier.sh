@@ -397,7 +397,7 @@ pip install -U pip
 pip install -r oq-engine/requirements-py27-linux64.txt
 pip install -e oq-engine/
 # FIXME Installation should be done without '-e' to test setup.py and MANIFEST
-pip install -e oq-platform-stadalone/
+pip install -e oq-platform-standalone/
 pip install -e oq-platform-ipt/
 pip install -e oq-platform-taxtweb/
 pip install -e oq-platform-taxonomy/
