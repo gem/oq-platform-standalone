@@ -1,5 +1,3 @@
-include LICENSE
-include README.rst
-recursive-include openquakeplatform_server *
+include LICENSE README.md
 recursive-include openquakeplatform/static *
 recursive-include openquakeplatform/templates *
