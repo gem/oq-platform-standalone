@@ -408,7 +408,8 @@ oq webui start -s &> runserver.log &
 server=\$!
 echo "\$server" > /tmp/server.pid
 
-# FIXME
+# FIXME Grace time for openquake.server to be started asynchronously
+# should be replaced by a timeboxed loop with an availability check
 sleep 10
 
 cd $GEM_GIT_PACKAGE
