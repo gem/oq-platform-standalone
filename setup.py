@@ -1,7 +1,7 @@
 import os
 from setuptools import setup
 
-with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
+with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     README = readme.read()
 
 # allow setup.py to be run from any path
@@ -9,17 +9,16 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='oq-platform-standalone',
-    version='1.0',
+    version='2.0.0',
     # packages=find_packages(),
-    packages=["openquakeplatform", "openquakeplatform_server"],
+    packages=["openquakeplatform"],
     include_package_data=True,
-    license='BSD License',  # example license
+    license="AGPL3",
     description='Standalone replacements for OpenQuake Platform.',
     long_description=README,
     url='http://github.com/gem/oq-platform-standalone',
     author='GEM Foundation',
     author_email='devops@openquake.org',
-    scripts=['openquakeplatform_server/bin/openquakeplatform_srv.py'],
     install_requires=[
         'django >=1.5, <1.12',
     ],

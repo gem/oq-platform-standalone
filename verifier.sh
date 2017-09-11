@@ -178,7 +178,7 @@ copy_common () {
 copy_dev () {
     scp "${lxc_ip}:$GEM_GIT_PACKAGE/xunit-platform-dev.xml" "out/" || true
     scp "${lxc_ip}:$GEM_GIT_PACKAGE/dev_*.png" "out/" || true
-    scp "${lxc_ip}:$GEM_GIT_PACKAGE/runserver.log" "out/dev_runserver.log" || true
+    scp "${lxc_ip}:runserver.log" "out/dev_runserver.log" || true
 }
 
 copy_prod () {
@@ -352,30 +352,16 @@ _devtest_innervm_run () {
     ssh -t  $lxc_ip "sudo apt-get update"
     # use this parameter to avoid blocks with sudoers updates: '-o Dpkg::Options::=--force-confdef'
     ssh -t  $lxc_ip "sudo apt-get -y upgrade"
-#     ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-latest-linux64.tar.gz ; tar zxvf geckodriver-latest-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
+    ssh -t  $lxc_ip "sudo apt-get install -y python-virtualenv python-pip git"
+    # ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-latest-linux64.tar.gz ; tar zxvf geckodriver-latest-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
     ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-v0.16.1-linux64.tar.gz ; tar zxvf geckodriver-v0.16.1-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
-    ssh -t  $lxc_ip "sudo pip install -U selenium==3.4.1"
-
-    ssh -t  $lxc_ip "sudo apt-get install -y build-essential python-dev python-imaging python-virtualenv git libxml2 libxml2-dev libxslt1-dev libxslt1.1 libblas-dev liblapack-dev curl wget xmlstarlet imagemagick gfortran python-nose libgeos-dev python-software-properties"
-    ssh -t  $lxc_ip "sudo add-apt-repository -y ppa:openquake-automatic-team/latest-master"
-    ssh -t  $lxc_ip "sudo apt-get update"
-    ssh -t  $lxc_ip "sudo apt-get install -y python-oq-engine"
-
-    # to allow mixed openquake packages installation (from packages and from sources) an 'ad hoc' __init__.py injection.
-    ssh -t  $lxc_ip "sudo echo \"try:
-    __import__('pkg_resources').declare_namespace(__name__)
-except ImportError:
-    __path__ = __import__('pkgutil').extend_path(__path__, __name__)\" > /tmp/new_init.py ;
-    init_file=\"\$(python -c 'import openquake ; print openquake.__path__[0]')/__init__.py\" ;
-    sudo cp /tmp/new_init.py \"\${init_file}\" ;
-    sudo python -m py_compile \"\${init_file}\" "
 
     repo_id="$GEM_GIT_REPO"
     # use copy of repository instead of clone it from github, if you want it comment next 2 lines and
     # uncomment the commented git clone line
     ssh -t  $lxc_ip "mkdir -p $GEM_GIT_PACKAGE"
     scp -r * "${lxc_ip}:$GEM_GIT_PACKAGE"
-    sa_apps="$sa_apps oq-moon"
+    sa_apps="oq-engine $sa_apps oq-moon"
     for app in $sa_apps; do
         app_repo="$(echo "$app" | sed 's/^openquakeplatform_/oq-platform-/g')"
 
@@ -404,23 +390,29 @@ set -e
 if [ \$GEM_SET_DEBUG ]; then
     set -x
 fi
-cd ~/$GEM_GIT_PACKAGE
-virtualenv --system-site-packages platform-env
-source platform-env/bin/activate
-# if host machine includes python-simplejson package it must overrided with
-# a proper version that don't conflict with Django requirements
-if dpkg -l python-simplejson 2>/dev/null | tail -n +6 | grep -q '^ii '; then
-    pip install simplejson==2.0.9
-fi
-pip install -e ../oq-platform-ipt/
-pip install -e ../oq-platform-taxtweb/
-pip install -e ../oq-platform-taxonomy/
+virtualenv env
+source env/bin/activate
+pip install -U pip
+pip install -U selenium==3.4.1
+pip install -r oq-engine/requirements-py27-linux64.txt
+pip install -e oq-engine/
+# FIXME Installation should be done without '-e' to test setup.py and MANIFEST
+pip install -e oq-platform-standalone/
+pip install -e oq-platform-ipt/
+pip install -e oq-platform-taxtweb/
+pip install -e oq-platform-taxonomy/
 
-pip install -e .
+cp oq-engine/openquake/server/local_settings.py.standalone oq-engine/openquake/server/local_settings.py
 
-./runserver.sh &
+oq webui start -s &> runserver.log &
 server=\$!
 echo "\$server" > /tmp/server.pid
+
+# FIXME Grace time for openquake.server to be started asynchronously
+# should be replaced by a timeboxed loop with an availability check
+sleep 10
+
+cd $GEM_GIT_PACKAGE
 cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
 export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
 export DISPLAY=:1
@@ -535,17 +527,6 @@ devtest_run () {
 
 #
 #  _prodtest_innervm_run <branch_id> <lxc_ip> - part of source test performed on lxc
-#                     the following activities are performed:
-#                     - extracts dependencies from oq-{engine,hazardlib, ..} debian/control
-#                       files and install them
-#                     - builds oq-hazardlib speedups
-#                     - installs oq-engine sources on lxc
-#                     - set up postgres
-#                     - upgrade db
-#                     - runs celeryd
-#                     - runs tests
-#                     - runs coverage
-#                     - collects all tests output files from lxc
 #
 #      <branch_id>    name of the tested branch
 #      <lxc_ip>       the IP address of lxc instance
@@ -555,75 +536,7 @@ _prodtest_innervm_run () {
 
     trap 'local LASTERR="$?" ; trap ERR ; (exit $LASTERR) ; return' ERR
 
-    scp .gem_init.sh ${lxc_ip}:
-    scp .gem_ffox_init.sh ${lxc_ip}:
-
-    # build oq-hazardlib speedups and put in the right place
-    ssh -t  $lxc_ip "source .gem_init.sh"
-
-    ssh -t  $lxc_ip "getent hosts oq-platform.localdomain"
-    ssh -t  $lxc_ip "rm -f ssh.log"
-
-    ssh -t  $lxc_ip "sudo apt-get update"
-    ssh -t  $lxc_ip "sudo apt-get -y upgrade"
-
-    ssh -t  $lxc_ip "sudo apt-get install -y build-essential python-dev python-imaging python-virtualenv git postgresql-9.1 postgresql-server-dev-9.1 postgresql-9.1-postgis openjdk-6-jre libxml2 libxml2-dev libxslt1-dev libxslt1.1 libblas-dev liblapack-dev curl wget xmlstarlet imagemagick gfortran python-nose libgeos-dev python-software-properties"
-    ssh -t  $lxc_ip "sudo add-apt-repository -y ppa:openquake-automatic-team/latest-master"
-    ssh -t  $lxc_ip "sudo apt-get update"
-    ssh -t  $lxc_ip "sudo apt-get install -y python-oq-engine"
-
-    ssh -t  $lxc_ip "sudo sed -i '1 s@^@local   all             all                                     trust\nhost    all             all             $lxc_ip/32          md5\n@g' /etc/postgresql/9.1/main/pg_hba.conf"
-
-    ssh -t  $lxc_ip "sudo sed -i \"s/\([#        ]*listen_addresses[     ]*=[    ]*\)[^#]*\(#.*\)*/listen_addresses = '*'    \2/g\" /etc/postgresql/9.1/main/postgresql.conf"
-
-    ssh -t  $lxc_ip "sudo service postgresql restart"
-
-    repo_id="$GEM_GIT_REPO"
-    ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/$GEM_GIT_PACKAGE"
-    ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/oq-platform-ipt || git clone --depth=1 $repo_id/oq-platform-ipt"
-    ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/oq-platform-taxtweb || git clone --depth=1 $repo_id/oq-platform-taxtweb"
-    ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/oq-platform-taxonomy || git clone --depth=1 $repo_id/oq-platform-taxonomy"
-    ssh -t  $lxc_ip "export GEM_SET_DEBUG=$GEM_SET_DEBUG
-rem_sig_hand() {
-    trap ERR
-    echo 'signal trapped'
-}
-trap rem_sig_hand ERR
-set -e
-if [ \$GEM_SET_DEBUG ]; then
-    set -x
-fi
-
-# install IPT
-cd oq-platform-ipt
-sudo pip install . -U --no-deps
-cd -
-
-# install taxtweb
-cd oq-platform-taxtweb
-sudo pip install . -U --no-deps
-cd -
-
-# install taxonomy
-cd oq-platform-taxonomy
-sudo pip install . -U --no-deps
-cd -
-
-echo -e \"y\ny\ny\n\" | oq-platform/openquakeplatform/bin/deploy.sh --hostname oq-platform.localdomain
-
-cd oq-platform/openquakeplatform
-
-# add a simulated qgis uploaded layer
-./openquakeplatform/bin/simqgis-layer-up.sh --sitename \"http://oq-platform.localdomain\"
-
-export PYTHONPATH=\$(pwd):\$(pwd)/openquakeplatform/test/config
-sed 's@^pla_basepath *= *\"http://localhost:8000\"@pla_basepath = \"http://oq-platform.localdomain\"@g' openquakeplatform/test/config/moon_config.py.tmpl > openquakeplatform/test/config/moon_config.py
-export DISPLAY=:1
-python -m openquake.moon.nose_runner --failurecatcher prod -v --with-xunit --xunit-file=xunit-platform-prod.xml  openquakeplatform/test
-sleep 3
-cd -
-"
-    echo "_prodtest_innervm_run: exit"
+    # To be implemented
 
     return 0
 }
