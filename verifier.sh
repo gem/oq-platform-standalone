@@ -402,8 +402,6 @@ pip install -e oq-platform-ipt/
 pip install -e oq-platform-taxtweb/
 pip install -e oq-platform-taxonomy/
 
-cp oq-engine/openquake/server/local_settings.py.standalone oq-engine/openquake/server/local_settings.py
-
 oq webui start -s &> runserver.log &
 server=\$!
 echo "\$server" > /tmp/server.pid
