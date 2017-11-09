@@ -352,8 +352,8 @@ _devtest_innervm_run () {
     ssh -t  $lxc_ip "sudo apt-get update"
     # use this parameter to avoid blocks with sudoers updates: '-o Dpkg::Options::=--force-confdef'
     ssh -t  $lxc_ip "sudo apt-get -y upgrade"
-    ssh -t  $lxc_ip "sudo apt-get install -y python-virtualenv python-pip git"
-    # ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-latest-linux64.tar.gz ; tar zxvf geckodriver-latest-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
+    ssh -t  $lxc_ip "sudo apt-get install -y python-virtualenv python-pip git wget"
+    # geckodriver-latest-linux64.tar.gz could be user for forefront tests
     ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-v0.16.1-linux64.tar.gz ; tar zxvf geckodriver-v0.16.1-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
 
     repo_id="$GEM_GIT_REPO"
