@@ -390,9 +390,10 @@ set -e
 if [ \$GEM_SET_DEBUG ]; then
     set -x
 fi
+py_ver=2
 for pito in \$(which python2) \$(which python3); do
-    virtualenv env
-    source env/bin/activate
+    virtualenv -p \${pito} env_\${py_ver}
+    source env_\${py_ver}/bin/activate
     pip install -U pip
     pip install -U selenium==3.4.1
     pip install -r oq-engine/requirements-py27-linux64.txt
@@ -424,6 +425,7 @@ for pito in \$(which python2) \$(which python3); do
         kill -KILL \$server
     fi
     deactivate
+    py_ver=\$(( py_ver + 1 ))
 done
 
 "
