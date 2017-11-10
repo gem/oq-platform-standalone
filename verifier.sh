@@ -344,6 +344,7 @@ _devtest_innervm_run () {
 
     sa_apps="$(python -c "from openquakeplatform.settings import STANDALONE_APPS ; print(' '.join(STANDALONE_APPS))")"
     # build oq-hazardlib speedups and put in the right place
+    ssh -t  $lxc_ip "sudo systemctl stop apt-daily.timer"
     ssh -t  $lxc_ip "source .gem_init.sh"
     ssh -t  $lxc_ip "mkdir oqdata"
 
