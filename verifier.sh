@@ -81,7 +81,7 @@ GEM_MAXLOOP=20
 GEM_ALWAYS_YES=false
 
 if [ "$GEM_EPHEM_NAME" = "" ]; then
-    GEM_EPHEM_NAME="ubuntu14-x11-lxc-eph"
+    GEM_EPHEM_NAME="ubuntu16-x11-lxc-eph"
 fi
 
 LXC_VER=$(lxc-ls --version | cut -d '.' -f 1)
