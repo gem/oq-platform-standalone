@@ -352,7 +352,7 @@ _devtest_innervm_run () {
     ssh -t  $lxc_ip "sudo apt-get update"
     # use this parameter to avoid blocks with sudoers updates: '-o Dpkg::Options::=--force-confdef'
     ssh -t  $lxc_ip "sudo apt-get -y upgrade"
-    ssh -t  $lxc_ip "sudo apt-get install -y python-virtualenv python-pip git"
+    ssh -t  $lxc_ip "sudo apt-get install -y python-virtualenv python-pip git python3"
     # ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-latest-linux64.tar.gz ; tar zxvf geckodriver-latest-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
     ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-v0.16.1-linux64.tar.gz ; tar zxvf geckodriver-v0.16.1-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
 
@@ -390,38 +390,42 @@ set -e
 if [ \$GEM_SET_DEBUG ]; then
     set -x
 fi
-virtualenv env
-source env/bin/activate
-pip install -U pip
-pip install -U selenium==3.4.1
-pip install -r oq-engine/requirements-py27-linux64.txt
-pip install -e oq-engine/
-# FIXME Installation should be done without '-e' to test setup.py and MANIFEST
-pip install -e oq-platform-standalone/
-pip install -e oq-platform-ipt/
-pip install -e oq-platform-taxtweb/
-pip install -e oq-platform-taxonomy/
+for pito in \$(which python2) \$(which python3); do
+    virtualenv env
+    source env/bin/activate
+    pip install -U pip
+    pip install -U selenium==3.4.1
+    pip install -r oq-engine/requirements-py27-linux64.txt
+    pip install -e oq-engine/
+    # FIXME Installation should be done without '-e' to test setup.py and MANIFEST
+    pip install -e oq-platform-standalone/
+    pip install -e oq-platform-ipt/
+    pip install -e oq-platform-taxtweb/
+    pip install -e oq-platform-taxonomy/
 
-oq webui start -s &> runserver.log &
-server=\$!
-echo "\$server" > /tmp/server.pid
+    oq webui start -s &> runserver.log &
+    server=\$!
+    echo "\$server" > /tmp/server.pid
 
-# FIXME Grace time for openquake.server to be started asynchronously
-# should be replaced by a timeboxed loop with an availability check
-sleep 10
+    # FIXME Grace time for openquake.server to be started asynchronously
+    # should be replaced by a timeboxed loop with an availability check
+    sleep 10
 
-cd $GEM_GIT_PACKAGE
-cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
-export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
-export DISPLAY=:1
-python -m openquake.moon.nose_runner --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test # || true
-sleep 3
-# sleep 40000 || true
-kill \$server
-sleep 3
-if kill -0 \$server >/dev/null 2>&1; then
-    kill -KILL \$server
-fi
+    cd $GEM_GIT_PACKAGE
+    cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
+    export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
+    export DISPLAY=:1
+    python -m openquake.moon.nose_runner --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test # || true
+    sleep 3
+    # sleep 40000 || true
+    kill \$server
+    sleep 3
+    if kill -0 \$server >/dev/null 2>&1; then
+        kill -KILL \$server
+    fi
+    deactivate
+done
+
 "
 
     echo "_devtest_innervm_run: exit"
