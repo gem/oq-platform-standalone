@@ -396,7 +396,11 @@ for pito in \$(which python2) \$(which python3); do
     source env_\${py_ver}/bin/activate
     pip install -U pip
     pip install -U selenium==3.4.1
-    pip install -r oq-engine/requirements-py27-linux64.txt
+    if [ \$py_ver -eq 2 ]; then
+         pip install -r oq-engine/requirements-py27-linux64.txt
+    else
+         pip install -r oq-engine/requirements-py35-linux64.txt
+    fi
     pip install -e oq-engine/
     # FIXME Installation should be done without '-e' to test setup.py and MANIFEST
     pip install -e oq-platform-standalone/
