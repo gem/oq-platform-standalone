@@ -397,12 +397,12 @@ pip install -U pip
 
 
 wget \"http://ftp.openquake.org/common/selenium-deps\"
-GEM_FIREFOX_VERSION=\"$(dpkg-query --show -f '${Version}' firefox)\"
+GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '\${Version}' firefox)\"
 . selenium-deps
-wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
-tar zxvf \"geckodriver-v${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
+wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
+tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
-pip install -U selenium==${GEM_SELENIUM_VERSION}
+pip install -U selenium==\${GEM_SELENIUM_VERSION}
 pip install -r oq-engine/requirements-py27-linux64.txt
 pip install -e oq-engine/
 # FIXME Installation should be done without '-e' to test setup.py and MANIFEST
