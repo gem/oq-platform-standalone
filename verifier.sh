@@ -176,7 +176,8 @@ copy_common () {
 }
 
 copy_dev () {
-    scp "${lxc_ip}:$GEM_GIT_PACKAGE/xunit-platform-dev.xml" "out/" || true
+    scp "${lxc_ip}:$GEM_GIT_PACKAGE/xunit-platform-dev_py2.xml" "out/" || true
+    scp "${lxc_ip}:$GEM_GIT_PACKAGE/xunit-platform-dev_py3.xml" "out/" || true
     scp "${lxc_ip}:$GEM_GIT_PACKAGE/dev_*.png" "out/" || true
     scp "${lxc_ip}:runserver.log" "out/dev_runserver.log" || true
 }
@@ -422,7 +423,7 @@ for pito in \$(which python2) \$(which python3); do
     cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
     export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
     export DISPLAY=:1
-    python -m openquake.moon.nose_runner --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test # || true
+    python -m openquake.moon.nose_runner --failurecatcher dev_\${py_ver} -v --with-xunit --xunit-file=xunit-platform-dev_\${py_ver}.xml  openquakeplatform/test # || true
     sleep 3
     # sleep 40000 || true
     kill \$server
