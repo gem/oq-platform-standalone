@@ -391,10 +391,8 @@ set -e
 if [ \$GEM_SET_DEBUG ]; then
     set -x
 fi
-# py_ver=2
-# for pito in \$(which python2) \$(which python3); do
-py_ver=3
-for pito in \$(which python3); do
+py_ver=2
+for pito in \$(which python2) \$(which python3); do
     cd \$HOME
     virtualenv -p \${pito} env_\${py_ver}
     source env_\${py_ver}/bin/activate
