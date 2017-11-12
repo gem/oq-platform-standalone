@@ -424,7 +424,7 @@ for pito in \$(which python2) \$(which python3); do
     export DISPLAY=:1
     python -m openquake.moon.nose_runner --failurecatcher dev -v --with-xunit --xunit-file=xunit-platform-dev.xml  openquakeplatform/test # || true
     sleep 3
-    sleep 40000 || true
+    # sleep 40000 || true
     kill \$server
     sleep 3
     if kill -0 \$server >/dev/null 2>&1; then
