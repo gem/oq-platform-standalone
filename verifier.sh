@@ -393,9 +393,9 @@ if [ \$GEM_SET_DEBUG ]; then
     set -x
 fi
 py_ver=2
-for pito in \$(which python2) \$(which python3); do
+for pyto in \$(which python2) \$(which python3); do
     cd \$HOME
-    virtualenv -p \${pito} env_\${py_ver}
+    virtualenv -p \${pyto} env_\${py_ver}
     source env_\${py_ver}/bin/activate
     pip install -U pip
     pip install -U selenium==3.4.1
@@ -423,7 +423,7 @@ for pito in \$(which python2) \$(which python3); do
     cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
     export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
     export DISPLAY=:1
-    python -m openquake.moon.nose_runner --failurecatcher dev_\${py_ver} -v --with-xunit --xunit-file=xunit-platform-dev_\${py_ver}.xml  openquakeplatform/test # || true
+    python -m openquake.moon.nose_runner --failurecatcher dev_py\${py_ver} -v --with-xunit --xunit-file=xunit-platform-dev_py\${py_ver}.xml  openquakeplatform/test # || true
     sleep 3
     # sleep 40000 || true
     kill \$server
