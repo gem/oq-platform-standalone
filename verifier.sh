@@ -414,8 +414,8 @@ for pyto in \$(which python2) \$(which python3); do
     # FIXME Installation should be done without '-e' to test setup.py and MANIFEST
     pip install -e oq-platform-standalone/
     pip install -e oq-platform-ipt/
-    pip install -e oq-platform-taxtweb/
-    pip install -e oq-platform-taxonomy/
+    # pip install -e oq-platform-taxtweb/
+    # pip install -e oq-platform-taxonomy/
 
     oq webui start -s &> runserver.log &
     server=\$!
