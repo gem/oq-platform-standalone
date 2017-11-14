@@ -413,9 +413,10 @@ for pyto in \$(which python2) \$(which python3); do
     pip install -e oq-engine/
     # FIXME Installation should be done without '-e' to test setup.py and MANIFEST
     pip install -e oq-platform-standalone/
-    pip install -e oq-platform-ipt/
-    # pip install -e oq-platform-taxtweb/
-    # pip install -e oq-platform-taxonomy/
+    for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
+        app_reponame=\"\$(echo \"\$app\" | sed 's/^openquakeplatform_/oq-platform-/g')\"
+        pip install -e \"\$app_reponame\"
+    done
 
     oq webui start -s &> runserver.log &
     server=\$!
