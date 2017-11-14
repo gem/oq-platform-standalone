@@ -354,9 +354,7 @@ _devtest_innervm_run () {
     ssh -t  $lxc_ip "sudo apt-get update"
     # use this parameter to avoid blocks with sudoers updates: '-o Dpkg::Options::=--force-confdef'
     ssh -t  $lxc_ip "sudo apt-get -y upgrade"
-    ssh -t  $lxc_ip "sudo apt-get install -y python-virtualenv python-pip git python3"
-    # ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-latest-linux64.tar.gz ; tar zxvf geckodriver-latest-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
-    ssh -t  $lxc_ip "wget http://ftp.openquake.org/mirror/mozilla/geckodriver-v0.16.1-linux64.tar.gz ; tar zxvf geckodriver-v0.16.1-linux64.tar.gz ; sudo cp geckodriver /usr/local/bin"
+    ssh -t  $lxc_ip "sudo apt-get install -y python-virtualenv python-pip git wget python3"
 
     repo_id="$GEM_GIT_REPO"
     # use copy of repository instead of clone it from github, if you want it comment next 2 lines and
@@ -392,13 +390,21 @@ set -e
 if [ \$GEM_SET_DEBUG ]; then
     set -x
 fi
+
+wget \"http://ftp.openquake.org/common/selenium-deps\"
+GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '${Version}' firefox)\"
+. selenium-deps
+wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
+tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
+sudo cp geckodriver /usr/local/bin
+
 py_ver=2
 for pyto in \$(which python2) \$(which python3); do
     cd \$HOME
     virtualenv -p \${pyto} env_\${py_ver}
     source env_\${py_ver}/bin/activate
     pip install -U pip
-    pip install -U selenium==3.4.1
+    pip install -U selenium==\${GEM_SELENIUM_VERSION}
     if [ \$py_ver -eq 2 ]; then
          pip install -r oq-engine/requirements-py27-linux64.txt
     else
