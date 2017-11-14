@@ -392,7 +392,7 @@ if [ \$GEM_SET_DEBUG ]; then
 fi
 
 wget \"http://ftp.openquake.org/common/selenium-deps\"
-GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '${Version}' firefox)\"
+GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '\${Version}' firefox)\"
 . selenium-deps
 wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
