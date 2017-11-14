@@ -430,7 +430,7 @@ for pyto in \$(which python2) \$(which python3); do
     cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
     export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
     export DISPLAY=:1
-    python -m openquake.moon.nose_runner --failurecatcher dev_py\${py_ver} -v --with-xunit --xunit-file=xunit-platform-dev_py\${py_ver}.xml  openquakeplatform/test # || true
+    python -m openquake.moon.nose_runner --failurecatcher dev_py\${py_ver} -v -s --with-xunit --xunit-file=xunit-platform-dev_py\${py_ver}.xml  openquakeplatform/test # || true
     sleep 3
     #    sleep 40000 || true
     kill \$server
