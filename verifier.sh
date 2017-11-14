@@ -431,7 +431,7 @@ for pyto in \$(which python2) \$(which python3); do
     export GEM_OPT_PACKAGES=\"\$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\",\".join(x for x in STANDALONE_APPS))')\"
     export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
     export DISPLAY=:1
-    python -m openquake.moon.nose_runner --failurecatcher dev_py\${py_ver} -v -s --with-xunit --xunit-file=xunit-platform-dev_py\${py_ver}.xml # || true
+    python -m openquake.moon.nose_runner --failurecatcher dev_py\${py_ver} -v -s --with-xunit --xunit-file=xunit-platform-dev_py\${py_ver}.xml openquakeplatform/test # || true
     sleep 3
     sleep 40000 || true
     kill \$server
