@@ -420,6 +420,8 @@ for pyto in \$(which python3); do
         pip install -e \"\$app_reponame\"
     done
 
+    # to avoid dates inside .ini files
+    export GEM_TIME_INVARIANT_OUTPUTS=y
     oq webui start -s &> runserver.log &
     server=\$!
     echo "\$server" > /tmp/server.pid
