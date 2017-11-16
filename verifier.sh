@@ -398,10 +398,8 @@ wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_V
 tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
 
-# py_ver=2
-# for pyto in \$(which python2) \$(which python3); do
-py_ver=3
-for pyto in \$(which python3); do
+py_ver=2
+for pyto in \$(which python2) \$(which python3); do
     cd \$HOME
     virtualenv -p \${pyto} env_\${py_ver}
     source env_\${py_ver}/bin/activate
@@ -437,9 +435,7 @@ for pyto in \$(which python3); do
     export DISPLAY=:1
     python -m openquake.moon.nose_runner --failurecatcher dev_py\${py_ver} -v -s --with-xunit --xunit-file=xunit-platform-dev_py\${py_ver}.xml openquakeplatform/test # || true
     sleep 3
-    if [ \$py_ver -eq 3 ]; then
-        sleep 40000 || true
-    fi
+    # sleep 40000 || true
     kill \$server
     sleep 3
     if kill -0 \$server >/dev/null 2>&1; then
