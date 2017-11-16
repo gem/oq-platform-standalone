@@ -99,7 +99,7 @@ INSTALLED_APPS = (
 # in your local_settings.py
 STANDALONE_APPS = (
     'openquakeplatform_ipt',
-#    'openquakeplatform_taxtweb',
+    'openquakeplatform_taxtweb',
 #    'openquakeplatform_taxonomy',
 )
 
