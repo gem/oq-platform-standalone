@@ -100,7 +100,7 @@ INSTALLED_APPS = (
 STANDALONE_APPS = (
     'openquakeplatform_ipt',
     'openquakeplatform_taxtweb',
-#    'openquakeplatform_taxonomy',
+    'openquakeplatform_taxonomy',
 )
 
 MIDDLEWARE_CLASSES = (
