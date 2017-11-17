@@ -413,10 +413,13 @@ for pyto in \$(which python2) \$(which python3); do
     pip install -e oq-engine/
     # FIXME Installation should be done without '-e' to test setup.py and MANIFEST
     pip install -e oq-platform-standalone/
-    pip install -e oq-platform-ipt/
-    pip install -e oq-platform-taxtweb/
-    pip install -e oq-platform-taxonomy/
+    for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
+        app_reponame=\"\$(echo \"\$app\" | sed 's/^openquakeplatform_/oq-platform-/g')\"
+        pip install -e \"\$app_reponame\"
+    done
 
+    # to avoid dates inside .ini files
+    export GEM_TIME_INVARIANT_OUTPUTS=y
     oq webui start -s &> runserver.log &
     server=\$!
     echo "\$server" > /tmp/server.pid
@@ -427,11 +430,12 @@ for pyto in \$(which python2) \$(which python3); do
 
     cd $GEM_GIT_PACKAGE
     cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
+    export GEM_OPT_PACKAGES=\"\$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\",\".join(x for x in STANDALONE_APPS))')\"
     export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
     export DISPLAY=:1
-    python -m openquake.moon.nose_runner --failurecatcher dev_py\${py_ver} -v --with-xunit --xunit-file=xunit-platform-dev_py\${py_ver}.xml  openquakeplatform/test # || true
+    python -m openquake.moon.nose_runner --failurecatcher dev_py\${py_ver} -v -s --with-xunit --xunit-file=xunit-platform-dev_py\${py_ver}.xml openquakeplatform/test # || true
     sleep 3
-    #    sleep 40000 || true
+    # sleep 40000 || true
     kill \$server
     sleep 3
     if kill -0 \$server >/dev/null 2>&1; then

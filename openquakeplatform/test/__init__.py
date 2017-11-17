@@ -1,10 +1,10 @@
-from openquake.moon import Moon
+from openquake.moon import platform_get, platform_del
 
-pla = Moon()
-pla.primary_set()
 
 def setup_package():
+    pla = platform_get()
     pla.init(autologin=False)
 
+
 def teardown_package():
-    pla.fini()
+    platform_del()

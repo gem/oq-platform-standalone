@@ -14,6 +14,10 @@ WEBUIURL = 'http://localhost:8800/'
 # Standalone flag to differentiate behaviors
 STANDALONE = True
 
+# If GEM_TIME_INVARIANT_OUTPUTS env variable is defined it means no
+# time variant stuff inside output files
+TIME_INVARIANT_OUTPUTS = ('GEM_TIME_INVARIANT_OUTPUTS' in os.environ)
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
