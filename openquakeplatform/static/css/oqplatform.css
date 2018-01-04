@@ -382,3 +382,7 @@ footer.footer div.container {
 .btn-group:last-child {
     margin-right: 10px !important;
 }
+
+.gem-apps-menu {
+    width: auto;
+}
