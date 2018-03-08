@@ -435,7 +435,6 @@ if kill -0 \$server >/dev/null 2>&1; then
     kill -KILL \$server
 fi
 deactivate
-py_ver=\$(( py_ver + 1 ))
 "
 
     echo "_devtest_innervm_run: exit"
