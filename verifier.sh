@@ -398,8 +398,8 @@ wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_V
 tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
 
-py_ver=2
-for pyto in \$(which python2) \$(which python3); do
+py_ver=3
+for pyto in \$(which python3); do
     cd \$HOME
     virtualenv -p \${pyto} env_\${py_ver}
     source env_\${py_ver}/bin/activate
