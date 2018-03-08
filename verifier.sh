@@ -176,7 +176,6 @@ copy_common () {
 }
 
 copy_dev () {
-    scp "${lxc_ip}:$GEM_GIT_PACKAGE/xunit-platform-dev_py2.xml" "out/" || true
     scp "${lxc_ip}:$GEM_GIT_PACKAGE/xunit-platform-dev_py3.xml" "out/" || true
     scp "${lxc_ip}:$GEM_GIT_PACKAGE/dev_*.png" "out/" || true
     scp "${lxc_ip}:runserver.log" "out/dev_runserver.log" || true
@@ -398,53 +397,45 @@ wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_V
 tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
 
-py_ver=3
-for pyto in \$(which python3); do
-    cd \$HOME
-    virtualenv -p \${pyto} env_\${py_ver}
-    source env_\${py_ver}/bin/activate
-    pip install -U pip
-    pip install -U selenium==\${GEM_SELENIUM_VERSION}
-    if [ \$py_ver -eq 2 ]; then
-         pip install -r oq-engine/requirements-py27-linux64.txt
-    else
-         pip install -r oq-engine/requirements-py35-linux64.txt
-    fi
-    pip install -e oq-engine/
-    # FIXME Installation should be done without '-e' to test setup.py and MANIFEST
-    pip install -e oq-platform-standalone/
-    for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
-        app_reponame=\"\$(echo \"\$app\" | sed 's/^openquakeplatform_/oq-platform-/g')\"
-        pip install -e \"\$app_reponame\"
-    done
-
-    # to avoid dates inside .ini files
-    export GEM_TIME_INVARIANT_OUTPUTS=y
-    oq webui start -s &> runserver.log &
-    server=\$!
-    echo "\$server" > /tmp/server.pid
-
-    # FIXME Grace time for openquake.server to be started asynchronously
-    # should be replaced by a timeboxed loop with an availability check
-    sleep 10
-
-    cd $GEM_GIT_PACKAGE
-    cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
-    export GEM_OPT_PACKAGES=\"\$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\",\".join(x for x in STANDALONE_APPS))')\"
-    export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
-    export DISPLAY=:1
-    python -m openquake.moon.nose_runner --failurecatcher dev_py\${py_ver} -v -s --with-xunit --xunit-file=xunit-platform-dev_py\${py_ver}.xml openquakeplatform/test # || true
-    sleep 3
-    # sleep 40000 || true
-    kill \$server
-    sleep 3
-    if kill -0 \$server >/dev/null 2>&1; then
-        kill -KILL \$server
-    fi
-    deactivate
-    py_ver=\$(( py_ver + 1 ))
+cd \$HOME
+virtualenv -p python3 venv
+source venv/bin/activate
+pip install -U pip
+pip install -U selenium==\${GEM_SELENIUM_VERSION}
+pip install -r oq-engine/requirements-py35-linux64.txt
+pip install -e oq-engine/
+# FIXME Installation should be done without '-e' to test setup.py and MANIFEST
+pip install -e oq-platform-standalone/
+for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
+    app_reponame=\"\$(echo \"\$app\" | sed 's/^openquakeplatform_/oq-platform-/g')\"
+    pip install -e \"\$app_reponame\"
 done
 
+# to avoid dates inside .ini files
+export GEM_TIME_INVARIANT_OUTPUTS=y
+oq webui start -s &> runserver.log &
+server=\$!
+echo "\$server" > /tmp/server.pid
+
+# FIXME Grace time for openquake.server to be started asynchronously
+# should be replaced by a timeboxed loop with an availability check
+sleep 10
+
+cd $GEM_GIT_PACKAGE
+cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
+export GEM_OPT_PACKAGES=\"\$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\",\".join(x for x in STANDALONE_APPS))')\"
+export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
+export DISPLAY=:1
+python -m openquake.moon.nose_runner --failurecatcher dev_py3 -v -s --with-xunit --xunit-file=xunit-platform-dev_py3.xml openquakeplatform/test # || true
+sleep 3
+# sleep 40000 || true
+kill \$server
+sleep 3
+if kill -0 \$server >/dev/null 2>&1; then
+    kill -KILL \$server
+fi
+deactivate
+py_ver=\$(( py_ver + 1 ))
 "
 
     echo "_devtest_innervm_run: exit"
