@@ -1,6 +1,11 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from importlib import import_module
+
+try:
+    # Django 2.0+
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 
 
 def oq_context_processor(request):

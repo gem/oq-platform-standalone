@@ -402,6 +402,7 @@ virtualenv -p python3 venv
 source venv/bin/activate
 pip install -U pip
 pip install -U selenium==\${GEM_SELENIUM_VERSION}
+pip install -e oq-moon/
 pip install -r oq-engine/requirements-py35-linux64.txt
 pip install -e oq-engine/
 # FIXME Installation should be done without '-e' to test setup.py and MANIFEST
@@ -424,7 +425,7 @@ sleep 10
 cd $GEM_GIT_PACKAGE
 cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
 export GEM_OPT_PACKAGES=\"\$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\",\".join(x for x in STANDALONE_APPS))')\"
-export PYTHONPATH=\$(pwd):\$(pwd)/../oq-moon:\$(pwd)/openquakeplatform/test/config
+export PYTHONPATH=\$(pwd)/openquakeplatform/test/config
 export DISPLAY=:1
 python -m openquake.moon.nose_runner --failurecatcher dev_py3 -v -s --with-xunit --xunit-file=xunit-platform-dev_py3.xml openquakeplatform/test # || true
 sleep 3
