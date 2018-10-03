@@ -403,7 +403,7 @@ source venv/bin/activate
 pip install -U pip
 pip install -U selenium==\${GEM_SELENIUM_VERSION}
 pip install -e oq-moon/
-pip install -r oq-engine/requirements-py35-linux64.txt
+pip install -r oq-engine/requirements-py36-linux64.txt
 pip install -e oq-engine/
 # FIXME Installation should be done without '-e' to test setup.py and MANIFEST
 pip install -e oq-platform-standalone/
