@@ -34,6 +34,7 @@ def oq_context_processor(request):
         appmod.header_info['class'] = cl_list[ct % 3]
         context['app_list'].append(appmod.header_info)
 
-    context['gem_qgis'] = oq_is_qgis_browser(request)
+    if oq_is_qgis_browser(request):
+        context['gem_qgis'] = True
 
     return context
