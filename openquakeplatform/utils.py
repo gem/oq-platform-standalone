@@ -8,6 +8,13 @@ except ImportError:
     from django.core.urlresolvers import reverse
 
 
+def oq_is_qgis_browser(request):
+    for k in request.META:
+        if k.startswith('HTTP_GEM__QGIS_'):
+            return True
+    return False
+
+
 def oq_context_processor(request):
     """
     A custom context processor which allows injection of additional
@@ -27,9 +34,6 @@ def oq_context_processor(request):
         appmod.header_info['class'] = cl_list[ct % 3]
         context['app_list'].append(appmod.header_info)
 
-    for k in request.META:
-        if k.startswith('HTTP_GEM__QGIS_'):
-            context['gem_qgis'] = True
-            break
+    context['gem_qgis'] = oq_is_qgis_browser(request)
 
     return context
