@@ -372,6 +372,20 @@ _devtest_innervm_run () {
         ssh -t  $lxc_ip "${plugins_pfx}git clone --depth=1 -b $branch_id $repo_id/${app_repo} || git clone --depth=1 $repo_id/${app_repo}"
     done
     ssh -t  $lxc_ip "export GEM_SET_DEBUG=$GEM_SET_DEBUG
+
+install_with_reqs () {
+    local app=\$1
+    local app_reponame
+    app_reponame=\"\${app/openquakeplatform_/oq-platform-}\"
+
+    if [ -f \${app_reponame}/requirements-py36-\${BUILD_OS}.txt ]; then
+        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py36-\${BUILD_OS}.txt > \$REQMIRROR
+        pip install -r \$REQMIRROR
+    fi
+
+    pip install -e \"\$app_reponame\"
+}
+
 rem_sig_hand() {
     trap ERR
     echo 'signal trapped'
@@ -406,17 +420,11 @@ pip install -e oq-moon/
 REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
 
-for app in oq-engine oq-platform-standalone \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
-    app_reponame=\"\${app/openquakeplatform_/oq-platform-}\"
-
-    echo \"MOP \${app_reponame}/requirements-py36-\${BUILD_OS}.txt\"
-    
-    if [ -f \${app_reponame}/requirements-py36-\${BUILD_OS}.txt ]; then
-        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py36-\${BUILD_OS}.txt > \$REQMIRROR
-        pip install -r \$REQMIRROR
-    fi
-
-    pip install -e \"\$app_reponame\"
+for app in oq-engine oq-platform-standalone; do
+    install_with_reqs \"\$app\"
+done
+for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
+    install_with_reqs \"\$app\"
 done
 rm -f "\$REQMIRROR"
 
