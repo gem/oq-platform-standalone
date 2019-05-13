@@ -362,7 +362,7 @@ _devtest_innervm_run () {
     scp -r * "${lxc_ip}:$GEM_GIT_PACKAGE"
     sa_apps="oq-engine $sa_apps oq-moon"
     for app in $sa_apps; do
-        app_repo="$(echo "$app" | sed 's/^openquakeplatform_/oq-platform-/g')"
+        app_repo="${app/openquakeplatform_/oq-platform-}"
 
         # ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/$GEM_GIT_PACKAGE"
         if [ "$plugins_branch_id" ]; then
@@ -372,6 +372,20 @@ _devtest_innervm_run () {
         ssh -t  $lxc_ip "${plugins_pfx}git clone --depth=1 -b $branch_id $repo_id/${app_repo} || git clone --depth=1 $repo_id/${app_repo}"
     done
     ssh -t  $lxc_ip "export GEM_SET_DEBUG=$GEM_SET_DEBUG
+
+install_with_reqs () {
+    local app=\$1
+    local app_reponame
+    app_reponame=\"\${app/openquakeplatform_/oq-platform-}\"
+
+    if [ -f \${app_reponame}/requirements-py36-\${BUILD_OS}.txt ]; then
+        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py36-\${BUILD_OS}.txt > \$REQMIRROR
+        pip install -r \$REQMIRROR
+    fi
+
+    pip install -e \"\$app_reponame\"
+}
+
 rem_sig_hand() {
     trap ERR
     echo 'signal trapped'
@@ -403,14 +417,16 @@ source venv/bin/activate
 pip install -U pip
 pip install -U selenium==\${GEM_SELENIUM_VERSION}
 pip install -e oq-moon/
-pip install -r oq-engine/requirements-py36-linux64.txt
-pip install -e oq-engine/
-# FIXME Installation should be done without '-e' to test setup.py and MANIFEST
-pip install -e oq-platform-standalone/
-for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
-    app_reponame=\"\$(echo \"\$app\" | sed 's/^openquakeplatform_/oq-platform-/g')\"
-    pip install -e \"\$app_reponame\"
+REQMIRROR=\$(mktemp)
+BUILD_OS=linux64
+
+for app in oq-engine oq-platform-standalone; do
+    install_with_reqs \"\$app\"
 done
+for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
+    install_with_reqs \"\$app\"
+done
+rm -f "\$REQMIRROR"
 
 # to avoid dates inside .ini files
 export GEM_TIME_INVARIANT_OUTPUTS=y
