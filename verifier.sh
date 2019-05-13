@@ -362,7 +362,7 @@ _devtest_innervm_run () {
     scp -r * "${lxc_ip}:$GEM_GIT_PACKAGE"
     sa_apps="oq-engine $sa_apps oq-moon"
     for app in $sa_apps; do
-        app_repo="${app/openquakeplatform-/oq-platform-}"
+        app_repo="${app/openquakeplatform_/oq-platform-}"
 
         # ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/$GEM_GIT_PACKAGE"
         if [ "$plugins_branch_id" ]; then
@@ -407,7 +407,7 @@ REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
 
 for app in oq-engine oq-platform-standalone \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
-    app_reponame=\"\${app/openquakeplatform-/oq-platform-}\"
+    app_reponame=\"\${app/openquakeplatform_/oq-platform-}\"
 
     if [ -f \${app_reponame}/requirements-py36-\${BUILD_OS}.txt ]; then
         sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py36-\${BUILD_OS}.txt > \$REQMIRROR
