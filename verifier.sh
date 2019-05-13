@@ -409,6 +409,8 @@ BUILD_OS=linux64
 for app in oq-engine oq-platform-standalone \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
     app_reponame=\"\${app/openquakeplatform_/oq-platform-}\"
 
+    echo \"MOP \${app_reponame}/requirements-py36-\${BUILD_OS}.txt\"
+    
     if [ -f \${app_reponame}/requirements-py36-\${BUILD_OS}.txt ]; then
         sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py36-\${BUILD_OS}.txt > \$REQMIRROR
         pip install -r \$REQMIRROR
