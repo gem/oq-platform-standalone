@@ -420,6 +420,7 @@ pip install -e oq-moon/
 REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
 
+pip install http://ftp.openquake.org/wheelhouse/linux/py36/GDAL-2.4.1-cp36-cp36m-manylinux1_x86_64.whl
 for app in oq-engine oq-platform-standalone; do
     install_with_reqs \"\$app\"
 done
