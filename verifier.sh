@@ -427,13 +427,13 @@ done
 for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
     install_with_reqs \"\$app\"
 done
-rm -f "\$REQMIRROR"
+rm -f \"\$REQMIRROR\"
 
 # to avoid dates inside .ini files
 export GEM_TIME_INVARIANT_OUTPUTS=y
 oq webui start -s &> runserver.log &
 server=\$!
-echo "\$server" > /tmp/server.pid
+echo \"\$server\" > /tmp/server.pid
 
 # FIXME Grace time for openquake.server to be started asynchronously
 # should be replaced by a timeboxed loop with an availability check
