@@ -206,7 +206,7 @@ sig_hand () {
         ssh -t $lxc_ip "
             if [ -f /tmp/server.pid ]; then
                 server=\$(cat /tmp/server.pid)
-                kill \$server
+                kill -INT \$server
                 sleep 3
                 if kill -0 \$server >/dev/null 2>&1; then
                     kill -KILL \$server
@@ -391,7 +391,7 @@ rem_sig_hand() {
     echo 'signal trapped'
     if [ -f /tmp/server.pid ]; then
          server=\$(cat /tmp/server.pid)
-         kill \$server
+         kill -INT \$server
          sleep 3
          if kill -0 \$server >/dev/null 2>&1; then
              kill -KILL \$server
@@ -447,7 +447,7 @@ export DISPLAY=:1
 python -m openquake.moon.nose_runner --failurecatcher dev_py3 -v -s --with-xunit --xunit-file=xunit-platform-dev_py3.xml openquakeplatform/test # || true
 sleep 3
 # sleep 40000 || true
-kill \$server
+kill -INT \$server
 sleep 3
 if kill -0 \$server >/dev/null 2>&1; then
     kill -KILL \$server
