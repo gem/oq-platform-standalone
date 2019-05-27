@@ -382,8 +382,15 @@ install_with_reqs () {
         sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py36-\${BUILD_OS}.txt > \$REQMIRROR
         pip install -r \$REQMIRROR
     fi
-
-    pip install -e \"\$app_reponame\"
+    if [ \"\$app\" = \"oq-engine\" -a -f \${app_reponame}/requirements-extra-py36-\${BUILD_OS}.txt ]; then
+        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-extra-py36-\${BUILD_OS}.txt > \$REQMIRROR
+        pip install -r \$REQMIRROR
+    fi
+    if [ \"\$app\" = \"oq-engine\" ]; then
+        pip install -e \"\$app_reponame/[platform]\"
+    else
+        pip install -e \"\$app_reponame\"
+    fi
 }
 
 rem_sig_hand() {
@@ -420,7 +427,6 @@ pip install -e oq-moon/
 REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
 
-pip install http://ftp.openquake.org/wheelhouse/linux/py36/GDAL-2.4.1-cp36-cp36m-manylinux1_x86_64.whl
 for app in oq-engine oq-platform-standalone; do
     install_with_reqs \"\$app\"
 done
