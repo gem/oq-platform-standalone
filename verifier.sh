@@ -382,8 +382,15 @@ install_with_reqs () {
         sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py36-\${BUILD_OS}.txt > \$REQMIRROR
         pip install -r \$REQMIRROR
     fi
-
-    pip install -e \"\$app_reponame\"
+    if [ \"\$app\" = \"oq-engine\" -a -f \${app_reponame}/requirements-extra-py36-\${BUILD_OS}.txt ]; then
+        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-extra-py36-\${BUILD_OS}.txt > \$REQMIRROR
+        pip install -r \$REQMIRROR
+    fi
+    if [ \"\$app\" = \"oq-engine\" ]; then
+        pip install -e \"\$app_reponame/[platform]\"
+    else
+        pip install -e \"\$app_reponame\"
+    fi
 }
 
 rem_sig_hand() {
@@ -426,13 +433,13 @@ done
 for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
     install_with_reqs \"\$app\"
 done
-rm -f "\$REQMIRROR"
+rm -f \"\$REQMIRROR\"
 
 # to avoid dates inside .ini files
 export GEM_TIME_INVARIANT_OUTPUTS=y
 oq webui start -s &> runserver.log &
 server=\$!
-echo "\$server" > /tmp/server.pid
+echo \"\$server\" > /tmp/server.pid
 
 # FIXME Grace time for openquake.server to be started asynchronously
 # should be replaced by a timeboxed loop with an availability check
