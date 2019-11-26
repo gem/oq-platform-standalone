@@ -435,7 +435,7 @@ for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS 
 done
 rm -f \"\$REQMIRROR\"
 
-rm demos-*.zip
+rm -f demos-*.zip
 wget https://artifacts.openquake.org/travis/demos-${plugins_branch_id}.zip || wget https://artifacts.openquake.org/travis/demos-master.zip
 rm -rf demos
 unzip demos-*.zip
