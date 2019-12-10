@@ -353,7 +353,7 @@ _devtest_innervm_run () {
     ssh -t  $lxc_ip "sudo apt-get update"
     # use this parameter to avoid blocks with sudoers updates: '-o Dpkg::Options::=--force-confdef'
     ssh -t  $lxc_ip "sudo apt-get -y upgrade"
-    ssh -t  $lxc_ip "sudo apt-get install -y python-virtualenv python-pip git wget python3"
+    ssh -t  $lxc_ip "sudo apt-get install -y python-virtualenv python-pip git wget zip unzip python3"
 
     repo_id="$GEM_GIT_REPO"
     # use copy of repository instead of clone it from github, if you want it comment next 2 lines and
@@ -434,6 +434,11 @@ for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS 
     install_with_reqs \"\$app\"
 done
 rm -f \"\$REQMIRROR\"
+
+rm -f demos-*.zip
+wget https://artifacts.openquake.org/travis/demos-${plugins_branch_id}.zip || wget https://artifacts.openquake.org/travis/demos-master.zip
+rm -rf demos
+unzip demos-*.zip
 
 # to avoid dates inside .ini files
 export GEM_TIME_INVARIANT_OUTPUTS=y
