@@ -390,7 +390,7 @@ install_with_reqs () {
         pip install -e \"\$app_reponame/[platform]\"
     else
         pip install -e \"\$app_reponame\"
-        if [ \"$app_reponame\" = \"oq-platform-taxtweb\" ]; then
+        if [ \"\$app_reponame\" = \"oq-platform-taxtweb\" ]; then
             export PYBUILD_NAME=oq-taxonomy
             pip install -e \"\$app_reponame\"
         fi
