@@ -39,12 +39,15 @@
 # to do it:
 # - create and run a new lxc of the same serie used here
 #
-# - exports:
+# on the guest run:
+# rm -rf oq-moon/ oq-platform-ipt/ oq-platform-standalone.old/ oq-platform-taxonomy/ oq-platform-taxtweb/ oqdata venv/ oq-engine/ selenium-deps*
+#
+# on the host run:
 # export GEM_EPHEM_NAME='<lxc-machine-name>'
 # export GEM_EPHEM_DESTROY='false'
 # export GEM_EPHEM_EXE='<lxc-machine-name>'
 #
-# run ./verifier.sh prodtest <your-branch-name>
+# ./verifier.sh prodtest <your-branch-name>
 
 
 
@@ -415,6 +418,7 @@ if [ \$GEM_SET_DEBUG ]; then
     set -x
 fi
 
+rm -f selenium-deps
 wget \"http://ftp.openquake.org/common/selenium-deps\"
 GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '\${Version}' firefox)\"
 . selenium-deps
