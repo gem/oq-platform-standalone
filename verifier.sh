@@ -433,6 +433,7 @@ cd \$HOME
 virtualenv -p python3 venv
 source venv/bin/activate
 pip install -U pip
+pip install -U nose
 pip install -U selenium==\${GEM_SELENIUM_VERSION}
 pip install -e oq-moon/
 REQMIRROR=\$(mktemp)
