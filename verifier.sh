@@ -181,7 +181,7 @@ copy_common () {
 copy_dev () {
     scp "${lxc_ip}:$GEM_GIT_PACKAGE/xunit-platform-dev_py3.xml" "out/" || true
     scp "${lxc_ip}:$GEM_GIT_PACKAGE/dev_*.png" "out/" || true
-    scp "${lxc_ip}:Downloads/*.zip" "out/" || true
+    scp "${lxc_ip}:Downloads/example*.zip" "out/" || true
     scp "${lxc_ip}:runserver.log" "out/dev_runserver.log" || true
 }
 
