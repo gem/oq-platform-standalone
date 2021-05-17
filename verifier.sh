@@ -181,6 +181,7 @@ copy_common () {
 copy_dev () {
     scp "${lxc_ip}:$GEM_GIT_PACKAGE/xunit-platform-dev_py3.xml" "out/" || true
     scp "${lxc_ip}:$GEM_GIT_PACKAGE/dev_*.png" "out/" || true
+    scp "${lxc_ip}:example*.zip" "out/" || true
     scp "${lxc_ip}:runserver.log" "out/dev_runserver.log" || true
 }
 
@@ -433,6 +434,7 @@ cd \$HOME
 virtualenv -p python3 venv
 source venv/bin/activate
 pip install -U pip
+pip install -U nose
 pip install -U selenium==\${GEM_SELENIUM_VERSION}
 pip install -e oq-moon/
 REQMIRROR=\$(mktemp)
