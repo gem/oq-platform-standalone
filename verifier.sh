@@ -382,6 +382,8 @@ install_with_reqs () {
     local app_reponame
     app_reponame=\"\${app/openquakeplatform_/oq-platform-}\"
 
+    echo $VIRTUAL_ENV
+    python --version
     if [ -f \${app_reponame}/requirements-py38-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt ]; then
         sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py38-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt > \$REQMIRROR
         pip install -r \$REQMIRROR
