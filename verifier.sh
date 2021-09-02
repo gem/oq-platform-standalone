@@ -357,7 +357,7 @@ _devtest_innervm_run () {
     ssh -t  $lxc_ip "sudo apt-get update"
     # use this parameter to avoid blocks with sudoers updates: '-o Dpkg::Options::=--force-confdef'
     ssh -t  $lxc_ip "sudo apt-get -y upgrade"
-    ssh -t  $lxc_ip "sudo apt-get install -y python-virtualenv python-pip git wget zip unzip python3"
+    ssh -t  $lxc_ip "sudo apt-get install -y python-virtualenv python-pip git wget zip unzip python3.8"
 
     repo_id="$GEM_GIT_REPO"
     # use copy of repository instead of clone it from github, if you want it comment next 2 lines and
