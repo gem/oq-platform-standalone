@@ -439,7 +439,7 @@ tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
 
 cd \$HOME
-virtualenv -p python3 venv
+python3.8 -m venv venv
 source venv/bin/activate
 pip install -U pip
 pip install -U nose
