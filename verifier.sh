@@ -65,7 +65,7 @@ if [ $GEM_SET_DEBUG ]; then
     set -x
 fi
 set -e
-GEM_GIT_REPO="git://github.com/gem"
+GEM_GIT_REPO="git@github.com:gem"
 GEM_GIT_PACKAGE="oq-platform-standalone"
 GEM_DEB_PACKAGE="python-${GEM_GIT_PACKAGE}"
 GEM_DEB_SERIE="master"
