@@ -469,7 +469,7 @@ echo \"\$server\" > /tmp/server.pid
 
 # FIXME Grace time for openquake.server to be started asynchronously
 # should be replaced by a timeboxed loop with an availability check
-sleep 10
+sleep 20
 
 cd $GEM_GIT_PACKAGE
 cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/config/moon_config.py
