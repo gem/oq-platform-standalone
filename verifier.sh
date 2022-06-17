@@ -40,7 +40,7 @@
 # - create and run a new lxc of the same serie used here
 #
 # on the guest run:
-# rm -rf oq-moon/ oq-platform-ipt/ oq-platform-standalone.old/ oq-platform-taxonomy/ oq-platform-taxtweb/ oqdata venv/ oq-engine/ selenium-deps-standalone*
+# rm -rf oq-moon/ oq-platform-ipt/ oq-platform-standalone.old/ oq-platform-taxonomy/ oq-platform-taxtweb/ oqdata venv/ oq-engine/ selenium-deps*
 #
 # on the host run:
 # export GEM_EPHEM_NAME='<lxc-machine-name>'
@@ -430,10 +430,10 @@ if [ \$GEM_SET_DEBUG ]; then
     set -x
 fi
 
-rm -f selenium-deps-standalone
-wget \"http://ftp.openquake.org/common/selenium-deps-standalone\"
+rm -f selenium-deps
+wget \"http://ftp.openquake.org/common/selenium-deps\"
 GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '\${Version}' firefox)\"
-. selenium-deps-standalone
+. selenium-deps
 wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
