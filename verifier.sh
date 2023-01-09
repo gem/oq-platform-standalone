@@ -434,6 +434,7 @@ rm -f selenium-deps
 wget \"http://ftp.openquake.org/common/selenium-deps\"
 GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '\${Version}' firefox)\"
 . selenium-deps
+export GEM_GECKODRIVER_VERSION=\"0.32.0\"
 wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
