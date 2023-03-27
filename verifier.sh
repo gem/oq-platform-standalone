@@ -375,7 +375,9 @@ _devtest_innervm_run () {
 
         ssh -t  $lxc_ip "${plugins_pfx}git clone --depth=1 -b $branch_id $repo_id/${app_repo} || git clone --depth=1 $repo_id/${app_repo}"
     done
-    ssh -t  $lxc_ip "export GEM_SET_DEBUG=$GEM_SET_DEBUG
+    ssh -t  $lxc_ip ":
+export GEM_SET_DEBUG=$GEM_SET_DEBUG
+export GEM_WAIT_BEFORE_CLOSE=$GEM_WAIT_BEFORE_CLOSE
 
 install_with_reqs () {
     local app=\$1
@@ -415,6 +417,9 @@ install_with_reqs () {
 rem_sig_hand() {
     trap ERR
     echo 'signal trapped'
+    if [ \"\$GEM_WAIT_BEFORE_CLOSE\" = \"true\" ]; then
+         sleep 20000 || true
+    fi
     if [ -f /tmp/server.pid ]; then
          server=\$(cat /tmp/server.pid)
          kill \$server
