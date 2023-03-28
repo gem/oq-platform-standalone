@@ -486,6 +486,16 @@ cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/conf
 export GEM_OPT_PACKAGES=\"\$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\",\".join(x for x in STANDALONE_APPS))')\"
 export PYTHONPATH=\$(pwd)/openquakeplatform/test/config
 export DISPLAY=:1
+engine_reply=0
+for ti in \$(seq 1 15); do
+    if curl --max-time 2 -s -o /dev/null -v http://127.0.0.1:8800/v1/ini_defaults ; then
+        engine_reply=1
+        break
+    fi
+done
+if [ \$engine_reply -ne 1 ]; then
+    exit 1
+fi
 python -m openquake.moon.nose_runner --failurecatcher dev_py3 -v -s --with-xunit --xunit-file=xunit-platform-dev_py3.xml openquakeplatform/test # || true
 sleep 3
 # sleep 40000 || true
