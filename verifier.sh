@@ -375,7 +375,9 @@ _devtest_innervm_run () {
 
         ssh -t  $lxc_ip "${plugins_pfx}git clone --depth=1 -b $branch_id $repo_id/${app_repo} || git clone --depth=1 $repo_id/${app_repo}"
     done
-    ssh -t  $lxc_ip "export GEM_SET_DEBUG=$GEM_SET_DEBUG
+    ssh -t  $lxc_ip ":
+export GEM_SET_DEBUG=$GEM_SET_DEBUG
+export GEM_WAIT_BEFORE_CLOSE=$GEM_WAIT_BEFORE_CLOSE
 
 install_with_reqs () {
     local app=\$1
@@ -415,6 +417,9 @@ install_with_reqs () {
 rem_sig_hand() {
     trap ERR
     echo 'signal trapped'
+    if [ \"\$GEM_WAIT_BEFORE_CLOSE\" = \"true\" ]; then
+         sleep 20000 || true
+    fi
     if [ -f /tmp/server.pid ]; then
          server=\$(cat /tmp/server.pid)
          kill \$server
@@ -481,6 +486,17 @@ cp openquakeplatform/test/config/moon_config.py.tmpl openquakeplatform/test/conf
 export GEM_OPT_PACKAGES=\"\$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\",\".join(x for x in STANDALONE_APPS))')\"
 export PYTHONPATH=\$(pwd)/openquakeplatform/test/config
 export DISPLAY=:1
+engine_reply=0
+for ti in \$(seq 1 50); do
+    if curl --max-time 2 -s -o /dev/null -v http://127.0.0.1:8800/v1/ini_defaults ; then
+        engine_reply=1
+        break
+    fi
+    sleep 2
+done
+if [ \$engine_reply -ne 1 ]; then
+    exit 1
+fi
 python -m openquake.moon.nose_runner --failurecatcher dev_py3 -v -s --with-xunit --xunit-file=xunit-platform-dev_py3.xml openquakeplatform/test # || true
 sleep 3
 # sleep 40000 || true
