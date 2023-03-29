@@ -487,11 +487,12 @@ export GEM_OPT_PACKAGES=\"\$(python -c 'from openquakeplatform.settings import S
 export PYTHONPATH=\$(pwd)/openquakeplatform/test/config
 export DISPLAY=:1
 engine_reply=0
-for ti in \$(seq 1 45); do
+for ti in \$(seq 1 50); do
     if curl --max-time 2 -s -o /dev/null -v http://127.0.0.1:8800/v1/ini_defaults ; then
         engine_reply=1
         break
     fi
+    sleep 2
 done
 if [ \$engine_reply -ne 1 ]; then
     exit 1
