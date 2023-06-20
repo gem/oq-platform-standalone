@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# verifier.sh  Copyright (c) 2016, GEM Foundation.
+# verifier.sh  Copyright (c) 2016-2023, GEM Foundation.
 #
 # OpenQuake is free software: you can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License as published
@@ -47,7 +47,7 @@
 # export GEM_EPHEM_DESTROY='false'
 # export GEM_EPHEM_EXE='<lxc-machine-name>'
 #
-# ./verifier.sh prodtest <your-branch-name>
+# ./verifier.sh devtest <your-branch-name>
 
 
 
@@ -84,7 +84,7 @@ GEM_MAXLOOP=20
 GEM_ALWAYS_YES=false
 
 if [ "$GEM_EPHEM_NAME" = "" ]; then
-    GEM_EPHEM_NAME="ubuntu16-x11-lxc-eph"
+    GEM_EPHEM_NAME="ubuntu18-x11-lxc-eph"
 fi
 
 LXC_VER=$(lxc-ls --version | cut -d '.' -f 1)
@@ -473,6 +473,7 @@ export GEM_TIME_INVARIANT_OUTPUTS=y
 export NUMBA_DISABLE_JIT=1
 
 # run webui
+oq dbserver upgrade
 oq webui start -s &> runserver.log &
 server=\$!
 echo \"\$server\" > /tmp/server.pid
