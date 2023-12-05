@@ -357,7 +357,6 @@ _devtest_innervm_run () {
     ssh -t  $lxc_ip "sudo apt-get update"
     # use this parameter to avoid blocks with sudoers updates: '-o Dpkg::Options::=--force-confdef'
     ssh -t  $lxc_ip "sudo apt-get -y upgrade"
-    ssh -t  $lxc_ip "sudo apt-get install -y python3.8-venv python3-pip git wget zip unzip python3.8"
 
     repo_id="$GEM_GIT_REPO"
     # use copy of repository instead of clone it from github, if you want it comment next 2 lines and
@@ -386,25 +385,15 @@ install_with_reqs () {
 
     echo \"Python version:\"
     python --version
-    if [ -f \${app_reponame}/requirements-py38-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt ]; then
-        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py38-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt > \$REQMIRROR
+    if [ -f \${app_reponame}/requirements-py310-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt ]; then
+        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py310-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt > \$REQMIRROR
         pip install -r \$REQMIRROR
-    elif [ -f \${app_reponame}/requirements-py38-\${BUILD_OS}.txt ]; then
-        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py38-\${BUILD_OS}.txt > \$REQMIRROR
-        pip install -r \$REQMIRROR
-    elif [ -f \${app_reponame}/requirements-py36-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt ]; then
-        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py36-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt > \$REQMIRROR
-        pip install -r \$REQMIRROR
-    elif [ -f \${app_reponame}/requirements-py36-\${BUILD_OS}.txt ]; then
-        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py36-\${BUILD_OS}.txt > \$REQMIRROR
-        pip install -r \$REQMIRROR
-    fi
-    if [ \"\$app\" = \"oq-engine\" -a -f \${app_reponame}/requirements-extra-py36-\${BUILD_OS}.txt ]; then
-        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-extra-py36-\${BUILD_OS}.txt > \$REQMIRROR
+    elif [ -f \${app_reponame}/requirements-py310-\${BUILD_OS}.txt ]; then
+        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py310-\${BUILD_OS}.txt > \$REQMIRROR
         pip install -r \$REQMIRROR
     fi
     if [ \"\$app\" = \"oq-engine\" ]; then
-        pip install -e \"\$app_reponame/[platform]\"
+        pip install -e \"\$app_reponame\"
     else
         pip install -e \"\$app_reponame\"
         if [ \"\$app_reponame\" = \"oq-platform-taxtweb\" ]; then
@@ -444,10 +433,10 @@ tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
 
 cd \$HOME
-python3.8 -m venv venv
+python3.10 -m venv venv
 source venv/bin/activate
 pip install -U pip
-pip install -U nose
+pip install -U nose3
 pip install -U selenium==\${GEM_SELENIUM_VERSION}
 pip install -e oq-moon/
 REQMIRROR=\$(mktemp)
