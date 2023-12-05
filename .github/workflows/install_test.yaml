@@ -1,0 +1,54 @@
+name: Installation and test of WebUI
+
+on:
+  workflow_dispatch:
+    inputs:
+      git-ref:
+        description: Git Ref
+        default: master
+        required: true
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled'
+        required: false
+        default: false
+
+env:
+  WHEEL_SDIR: wheelhouse
+  SETUPTOOLS_USE_DISTUTILS: stdlib
+jobs:
+  standalone:
+    name: WebUI Standalone on Linux ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ "ubuntu-22.04" ]
+        python: [ "3.9", "3.10", "3.11" ]
+        platform: [ "x86_64"]
+        os-name: ["jammy"]
+    env:
+      PLAT: "${{ matrix.platform }}"
+    steps:
+    - name: Clone Repository (Master)
+      uses: actions/checkout@v4
+      if: github.event.inputs.git-ref == ''
+    - name: Clone Repository (Custom Ref)
+      uses: actions/checkout@v4
+      if: github.event.inputs.git-ref != ''
+      with:
+        ref: ${{ github.event.inputs.git-ref }}
+    - name: Set up Python  ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    # You can test your matrix by printing the current Python version
+    - name: Display Python version
+      run: python -c "import sys; print(sys.version)"
+    - name: get code of OpenQuake engine
+      env:
+        REPO_DIR: "https://github.com/gem/oq-engine.git"
+        BUILD_COMMIT: master
+      run: |
+          echo $PATH
+          git clone -b ${BUILD_COMMIT} ${REPO_DIR}
