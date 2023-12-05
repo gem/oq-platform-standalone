@@ -393,7 +393,7 @@ install_with_reqs () {
         pip install -r \$REQMIRROR
     fi
     if [ \"\$app\" = \"oq-engine\" ]; then
-        pip install -e \"\$app_reponame/[platform]\"
+        pip install -e \"\$app_reponame\"
     else
         pip install -e \"\$app_reponame\"
         if [ \"\$app_reponame\" = \"oq-platform-taxtweb\" ]; then
