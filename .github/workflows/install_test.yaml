@@ -12,6 +12,11 @@ on:
         description: 'Run the build with tmate debugging enabled'
         required: false
         default: false
+  schedule:
+    - cron: "15 23 * * *"
+  push:
+    branches: [master]
+  pull_request:
 
 env:
   WHEEL_SDIR: wheelhouse
