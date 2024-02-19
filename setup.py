@@ -22,7 +22,7 @@ setup(
     author_email='devops@openquake.org',
     install_requires=[
     #   'django >=1.5, <2.3',
-        'django >=3.2',
+        'django >=4.2, <5',
     ],
     classifiers=[
         'Environment :: Web Environment',
