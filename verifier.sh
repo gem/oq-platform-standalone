@@ -437,7 +437,7 @@ sudo cp geckodriver /usr/local/bin
 cd \$HOME
 mypython=${GEM_PYTHON_VERSION}
 #run it
-eval '$mypython -c "import sys; print(sys.version)"'
+eval '$mypython -c \"import sys; print(sys.version)\"'
 sleep 2
 eval '$mypython -m venv venv'
 #python3.11 -m venv venv
