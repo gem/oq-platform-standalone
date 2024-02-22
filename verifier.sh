@@ -435,11 +435,10 @@ tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
 
 cd \$HOME
-mypython=${GEM_PYTHON_VERSION}
 #run it
-eval '$mypython -c \"import sys; print(sys.version)\"'
+eval '${GEM_PYTHON_VERSION} -c \"import sys; print(sys.version)\"'
 sleep 2
-eval '$mypython -m venv venv'
+eval '${GEM_PYTHON_VERSION} -m venv venv'
 #python3.11 -m venv venv
 source venv/bin/activate
 pip install -U pip
