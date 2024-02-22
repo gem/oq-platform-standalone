@@ -69,6 +69,8 @@ GEM_GIT_REPO="$(echo "${repository:-git@github.com:gem/oq-platform-standalone.gi
 GEM_GIT_PACKAGE="oq-platform-standalone"
 GEM_DEB_PACKAGE="python-${GEM_GIT_PACKAGE}"
 GEM_DEB_SERIE="master"
+GEM_PYTHON_VERSION="python3.11"
+GEM_PY_VERSION="py311"
 if [ -z "$GEM_DEB_REPO" ]; then
     GEM_DEB_REPO="$HOME/gem_ubuntu_repo"
 fi
@@ -385,11 +387,11 @@ install_with_reqs () {
 
     echo \"Python version:\"
     python --version
-    if [ -f \${app_reponame}/requirements-py310-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt ]; then
-        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py310-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt > \$REQMIRROR
+    if [ -f \${app_reponame}/requirements-${GEM_PY_VERSION}-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt ]; then
+        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-${GEM_PY_VERSION}-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt > \$REQMIRROR
         pip install -r \$REQMIRROR
-    elif [ -f \${app_reponame}/requirements-py310-\${BUILD_OS}.txt ]; then
-        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-py310-\${BUILD_OS}.txt > \$REQMIRROR
+    elif [ -f \${app_reponame}/requirements-${GEM_PY_VERSION}-\${BUILD_OS}.txt ]; then
+        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-${GEM_PY_VERSION}-\${BUILD_OS}.txt > \$REQMIRROR
         pip install -r \$REQMIRROR
     fi
     if [ \"\$app\" = \"oq-engine\" ]; then
@@ -433,7 +435,11 @@ tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
 
 cd \$HOME
-python3.10 -m venv venv
+#run it
+eval '${GEM_PYTHON_VERSION} -c \"import sys; print(sys.version)\"'
+sleep 2
+eval '${GEM_PYTHON_VERSION} -m venv venv'
+#python3.11 -m venv venv
 source venv/bin/activate
 pip install -U pip
 pip install -U nose3
