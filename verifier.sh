@@ -474,7 +474,7 @@ echo \$GEM_TOOLS_ONLY
 if [ -z \$GEM_TOOLS_ONLY ]; then
     cd oq-engine/openquake/server
     cp local_settings.py.tools.tmpl local_settings.py
-    cd $HOME
+    cd \$HOME
 fi
 oq webui start -s &> runserver.log &
 server=\$!
