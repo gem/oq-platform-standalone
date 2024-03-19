@@ -467,7 +467,8 @@ export GEM_TIME_INVARIANT_OUTPUTS=y
 export NUMBA_DISABLE_JIT=1
 
 # run webui
-if [ \$GEM_TOOLS_ONLY ]; then
+echo \$GEM_TOOLS_ONLY
+if [ \"\$GEM_TOOLS_ONLY\" = \"True\" ]; then
     cd oq-engine/openquake/server
     cp local_settings.py.tools.tmpl local_settings.py
     cd $HOME
