@@ -1,5 +1,7 @@
 {%if oq_engine_version %}
+{%if not tools_only %}
 <li class="engine"><a href="{% url 'index' %}">Engine</a></li>
+{% endif %}
 {% endif %}
 {% for app in app_list %}
 <li class="{{ app.class }}"><a href="{{ app.url }}">{{ app.title }}</a></li>
