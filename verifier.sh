@@ -71,6 +71,7 @@ GEM_DEB_PACKAGE="python-${GEM_GIT_PACKAGE}"
 GEM_DEB_SERIE="master"
 GEM_PYTHON_VERSION="python3.11"
 GEM_PY_VERSION="py311"
+GEM_TOOLS_ONLY=${GEM_TOOLS_ONLY}
 if [ -z "$GEM_DEB_REPO" ]; then
     GEM_DEB_REPO="$HOME/gem_ubuntu_repo"
 fi
