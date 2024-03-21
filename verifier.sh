@@ -473,7 +473,7 @@ export NUMBA_DISABLE_JIT=1
 echo \$GEM_TOOLS_ONLY
 if [ -z \$GEM_TOOLS_ONLY ]; then
     cd oq-engine/openquake/server
-    cp local_settings.py.tools.tmpl local_settings.py
+    cp local_settings.py.tools local_settings.py
     cd \$HOME
 fi
 oq webui start -s &> runserver.log &
