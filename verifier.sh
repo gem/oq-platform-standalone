@@ -477,7 +477,7 @@ if [ -z \$GEM_TOOLS_ONLY ]; then
     pip install django-cookie-consent
     python manage.py migrate
     python manage.py loaddata fixtures/0001_cookie_consent.json
-    python mangage.py collectstatic
+    python manage.py collectstatic
     cd \$HOME
 fi
 oq webui start -s &> runserver.log &
