@@ -474,6 +474,10 @@ echo \$GEM_TOOLS_ONLY
 if [ -z \$GEM_TOOLS_ONLY ]; then
     cd oq-engine/openquake/server
     cp local_settings.py.tools local_settings.py
+    pip install django-cookie-consent
+    python manage.py migrate
+    python manage.py loaddata fixtures/0001_cookie_consent.json
+    python mangage.py collectstatic
     cd \$HOME
 fi
 oq webui start -s &> runserver.log &
