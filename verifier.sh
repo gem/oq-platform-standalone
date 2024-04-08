@@ -478,7 +478,7 @@ if [ -z \$GEM_TOOLS_ONLY ]; then
     cp local_settings.py.tools local_settings.py
     pip install django-cookie-consent
     python manage.py migrate
-    python manage.py loaddata fixtures/0001_cookie_consent.json
+    python manage.py loaddata ../oq-platform-standalone/openquakeplatform/fixtures/0001_cookie_consent.json
     python manage.py collectstatic
     cd \$HOME
 fi
