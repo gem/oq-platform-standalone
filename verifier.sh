@@ -472,8 +472,8 @@ export NUMBA_DISABLE_JIT=1
 # run webui
 echo \$GEM_TOOLS_ONLY
 if [ -z \$GEM_TOOLS_ONLY ]; then
-    sudo mkdir -p /var/www	
-    sudo chown -R ubuntu /var/www	
+    sudo mkdir -p /var/www/webui
+    sudo chown -R ubuntu /var/www/webui
     cd oq-engine/openquake/server
     cp local_settings.py.tools local_settings.py
     pip install django-cookie-consent
