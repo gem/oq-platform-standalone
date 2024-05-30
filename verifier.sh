@@ -476,7 +476,6 @@ if [ -z \$GEM_TOOLS_ONLY ]; then
     sudo chown -R ubuntu /var/www/webui
     cd oq-engine/openquake/server
     cp local_settings.py.tools local_settings.py
-    pip install django-cors-headers
     pip install django-cookie-consent
     python manage.py migrate
     python manage.py loaddata ../../../oq-platform-standalone/openquakeplatform/fixtures/0001_cookie_consent.json
