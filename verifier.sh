@@ -485,7 +485,7 @@ fi
 oq webui start -s &> runserver.log &
 server=\$!
 echo \"\$server\" > /tmp/server.pid
-sleep 4000000
+# sleep 4000000
 
 # FIXME Grace time for openquake.server to be started asynchronously
 # should be replaced by a timeboxed loop with an availability check
