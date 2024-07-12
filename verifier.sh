@@ -470,18 +470,18 @@ export GEM_TIME_INVARIANT_OUTPUTS=y
 export NUMBA_DISABLE_JIT=1
 
 # run webui
-echo \$GEM_TOOLS_ONLY
-if [ -z \$GEM_TOOLS_ONLY ]; then
-    sudo mkdir -p /var/www/webui
-    sudo chown -R ubuntu /var/www/webui
-    cd oq-engine/openquake/server
-    cp local_settings.py.tools local_settings.py
-    python manage.py migrate
-    python manage.py loaddata ./fixtures/0001_cookie_consent_required_plus_hide_cookie_bar.json
-    python manage.py loaddata ./fixtures/0002_cookie_consent_analytics.json
-    python manage.py collectstatic
-    cd \$HOME
-fi
+# echo \$GEM_TOOLS_ONLY
+# if [ -z \$GEM_TOOLS_ONLY ]; then
+sudo mkdir -p /var/www/webui
+sudo chown -R ubuntu /var/www/webui
+cd oq-engine/openquake/server
+cp local_settings.py.tools local_settings.py
+python manage.py migrate
+python manage.py loaddata ./fixtures/0001_cookie_consent_required_plus_hide_cookie_bar.json
+python manage.py loaddata ./fixtures/0002_cookie_consent_analytics.json
+python manage.py collectstatic
+cd \$HOME
+# fi
 oq webui start -s &> runserver.log &
 server=\$!
 echo \"\$server\" > /tmp/server.pid
