@@ -470,7 +470,7 @@ export GEM_TIME_INVARIANT_OUTPUTS=y
 export NUMBA_DISABLE_JIT=1
 
 # run webui
-# echo \$GEM_TOOLS_ONLY
+echo \$GEM_TOOLS_ONLY
 sudo mkdir -p /var/www/webui
 sudo chown -R ubuntu /var/www/webui
 cd oq-engine/openquake/server
