@@ -104,8 +104,12 @@ INSTALLED_APPS = (
 STANDALONE_APPS = (
     'openquakeplatform_ipt',
     'openquakeplatform_taxtweb',
-    'openquakeplatform_taxonomy',
 )
+if APPLICATION_MODE not in ('TOOLS_ONLY',):
+    STANDALONE_APPS += (
+        'openquakeplatform_taxonomy',
+    )
+
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
