@@ -1,12 +1,12 @@
 {%if oq_engine_version %}
-{%if not tools_only %}
+{%if not external_tools %}
 <li class="engine"><a href="{% url 'index' %}">Engine</a></li>
 {% endif %}
 {% endif %}
 {% for app in app_list %}
 <li class="{{ app.class }}"><a href="{{ app.url }}">{{ app.title }}</a></li>
 {% endfor %}
-{% if tools_only %}
+{% if external_tools %}
 <li class="explore"><a href="https://taxonomy.openquake.org">Taxonomy</a></li>
 {% endif %}
 
