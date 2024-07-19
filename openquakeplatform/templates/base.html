@@ -14,9 +14,6 @@
       {% else %}
       <link href="{{ STATIC_URL }}lib/css/assets.min.css" rel="stylesheet"/>
       {% endif %}
-      {%if tools_only %}
-      <link href="{{ STATIC_URL }}css/cookie_consent.css" rel="stylesheet"/>
-      {% endif %}
       {% block extra_head %}
       {% endblock %}
     {% endblock %}
@@ -82,8 +79,5 @@
         color: black;
       }
     </style>
-    {%if tools_only %}
-    {% include "includes/cookie_bar.html" %}
-    {% endif %}
   </body>
 </html>
