@@ -14,7 +14,7 @@ WEBUIURL = 'http://localhost:8800/'
 # Standalone flag to differentiate behaviors
 STANDALONE = True
 
-APPLICATION_MODE = "PUBLIC"
+APPLICATION_MODE = "TOOLS_ONLY"
 
 APPLICATION_MODE = os.environ.get('OQ_APPLICATION_MODE', APPLICATION_MODE)
 
