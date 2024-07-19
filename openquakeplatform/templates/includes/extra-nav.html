@@ -6,3 +6,7 @@
 {% for app in app_list %}
 <li class="{{ app.class }}"><a href="{{ app.url }}">{{ app.title }}</a></li>
 {% endfor %}
+{% if tools_only %}
+<li class="calc"><a href="https://taxonomy.openquake.org">Taxonomy</a></li>
+{% endif %}
+
