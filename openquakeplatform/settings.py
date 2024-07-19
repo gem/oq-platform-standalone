@@ -14,9 +14,7 @@ WEBUIURL = 'http://localhost:8800/'
 # Standalone flag to differentiate behaviors
 STANDALONE = True
 
-APPLICATION_MODE = "TOOLS_ONLY"
-
-APPLICATION_MODE = os.environ.get('OQ_APPLICATION_MODE', APPLICATION_MODE)
+EXTERNAL_TOOLS = os.environ.get('EXTERNAL_TOOLS', False)
 
 # If GEM_TIME_INVARIANT_OUTPUTS env variable is defined it means no
 # time variant stuff inside output files
@@ -105,7 +103,7 @@ STANDALONE_APPS = (
     'openquakeplatform_ipt',
     'openquakeplatform_taxtweb',
 )
-if APPLICATION_MODE not in ('TOOLS_ONLY',):
+if not EXTERNAL_TOOLS:
     STANDALONE_APPS += (
         'openquakeplatform_taxonomy',
     )
