@@ -482,6 +482,7 @@ python manage.py loaddata ./fixtures/0001_cookie_consent_required_plus_hide_cook
 python manage.py loaddata ./fixtures/0002_cookie_consent_analytics.json
 python manage.py collectstatic
 cd \$HOME
+export EXTERNAL_TOOLS=\"True\"
 oq webui start -s &> runserver.log &
 server=\$!
 echo \"\$server\" > /tmp/server.pid
