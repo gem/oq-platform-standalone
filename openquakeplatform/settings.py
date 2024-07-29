@@ -14,6 +14,8 @@ WEBUIURL = 'http://localhost:8800/'
 # Standalone flag to differentiate behaviors
 STANDALONE = True
 
+EXTERNAL_TOOLS = True if os.getenv('EXTERNAL_TOOLS', 'False') == 'True' else False
+
 # If GEM_TIME_INVARIANT_OUTPUTS env variable is defined it means no
 # time variant stuff inside output files
 TIME_INVARIANT_OUTPUTS = ('GEM_TIME_INVARIANT_OUTPUTS' in os.environ)
@@ -100,8 +102,12 @@ INSTALLED_APPS = (
 STANDALONE_APPS = (
     'openquakeplatform_ipt',
     'openquakeplatform_taxtweb',
-    'openquakeplatform_taxonomy',
 )
+if not EXTERNAL_TOOLS:
+    STANDALONE_APPS += (
+        'openquakeplatform_taxonomy',
+    )
+
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
