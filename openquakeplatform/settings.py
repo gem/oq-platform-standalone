@@ -14,7 +14,7 @@ WEBUIURL = 'http://localhost:8800/'
 # Standalone flag to differentiate behaviors
 STANDALONE = True
 
-EXTERNAL_TOOLS = True if os.getenv('EXTERNAL_TOOLS', "False") == "True" else False
+EXTERNAL_TOOLS = True if os.getenv('EXTERNAL_TOOLS', 'False') == 'True' else False
 
 # If GEM_TIME_INVARIANT_OUTPUTS env variable is defined it means no
 # time variant stuff inside output files
