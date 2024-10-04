@@ -38,9 +38,9 @@ DEBUG = True
 # this file on the host and without Django installed to get INSTALLED_APPS
 try:
     from django import get_version
-    from distutils.version import StrictVersion
+    from packaging.version import Version
 
-    if StrictVersion(get_version()) < StrictVersion('1.8'):
+    if Version(get_version()) < Version('1.8'):
         # For backward compatibility with Django < 1.8
         # Be aware that names are different (template -> core)
         TEMPLATE_CONTEXT_PROCESSORS = (
