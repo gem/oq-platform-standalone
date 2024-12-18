@@ -508,10 +508,10 @@ done
 if [ \$engine_reply -ne 1 ]; then
     exit 1
 fi
-python -m openquake.moon.nose_runner --failurecatcher dev_py3 -v -s --with-xunit --xunit-file=xunit-platform-dev_py3.xml openquakeplatform/test # || true
-#sleep 3
-#sleep 40000 || true
 sleep 40000
+python -m openquake.moon.nose_runner --failurecatcher dev_py3 -v -s --with-xunit --xunit-file=xunit-platform-dev_py3.xml openquakeplatform/test # || true
+sleep 3
+#sleep 40000 || true
 kill \$server
 sleep 3
 if kill -0 \$server >/dev/null 2>&1; then
