@@ -74,6 +74,9 @@ GEM_PY_VERSION="py311"
 if [ -z "$GEM_TOOLS_ONLY" ]; then
     GEM_TOOLS_ONLY=${GEM_TOOLS_ONLY}
 fi
+if [ -z "$TOOLS_DEV" ]; then
+    TOOLS_DEV=${TOOLS_DEV}
+fi
 if [ -z "$GEM_DEB_REPO" ]; then
     GEM_DEB_REPO="$HOME/gem_ubuntu_repo"
 fi
@@ -471,6 +474,7 @@ export NUMBA_DISABLE_JIT=1
 
 # run webui
 echo \$GEM_TOOLS_ONLY
+echo \$TOOLS_DEV
 sudo mkdir -p /var/www/webui
 sudo chown -R ubuntu /var/www/webui
 cd oq-engine/openquake/server
