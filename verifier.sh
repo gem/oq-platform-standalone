@@ -72,7 +72,7 @@ GEM_DEB_SERIE="master"
 GEM_PYTHON_VERSION="python3.11"
 GEM_PY_VERSION="py311"
 if [ -z "$GEM_TOOLS_ONLY" ]; then
-    GEM_TOOLS_ONLY=${GEM_TOOLS_ONLY}
+GEM_TOOLS_ONLY=${GEM_TOOLS_ONLY}
 fi
 if [ -z "$TOOLS_DEV" ]; then
     TOOLS_DEV=${TOOLS_DEV}
@@ -512,7 +512,7 @@ done
 if [ \$engine_reply -ne 1 ]; then
     exit 1
 fi
-sleep 40000
+#sleep 40000
 python -m openquake.moon.nose_runner --failurecatcher dev_py3 -v -s --with-xunit --xunit-file=xunit-platform-dev_py3.xml openquakeplatform/test # || true
 sleep 3
 #sleep 40000 || true
