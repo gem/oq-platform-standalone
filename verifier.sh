@@ -74,9 +74,6 @@ GEM_PY_VERSION="py311"
 if [ -z "$GEM_TOOLS_ONLY" ]; then
 GEM_TOOLS_ONLY=${GEM_TOOLS_ONLY}
 fi
-if [ -z "$TOOLS_DEV" ]; then
-    TOOLS_DEV=${TOOLS_DEV}
-fi
 if [ -z "$GEM_DEB_REPO" ]; then
     GEM_DEB_REPO="$HOME/gem_ubuntu_repo"
 fi
@@ -486,6 +483,7 @@ python manage.py loaddata ./fixtures/0001_cookie_consent_required_plus_hide_cook
 python manage.py loaddata ./fixtures/0002_cookie_consent_analytics.json
 python manage.py collectstatic
 cd \$HOME
+export TOOLS_DEV=\"True\"
 export EXTERNAL_TOOLS=\"True\"
 oq webui start -s &> runserver.log &
 server=\$!
