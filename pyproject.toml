@@ -1,18 +1,19 @@
 [build-system]
-requires = ["setuptools >= 64.0"]
+requires = ["setuptools >= 64.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "oq-platform-standalone"
-dynamic = ["version"]
 description = "Standalone replacements for OpenQuake Platform."
 readme = "README.md"
-license = "AGPL3"
+license = { text = "AGPL-3.0-only" }
+requires-python = ">=3.10"
+
 authors = [
     { name = "GEM Foundation", email = "devops@openquake.org" },
 ]
 maintainers = [
-  {name = "GEM Foundation", email = "devops@openquake.org"},
+    {name = "GEM Foundation", email = "devops@openquake.org"},
 ]
 classifiers = [
     "Environment :: Web Environment",
@@ -25,15 +26,11 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
 ]
-dependencies = [
-    "django >=4.2, <5",
-]
-
+dependencies = [ "django >=4.2, <5", ]
+dynamic = [ "version", ]
 [project.urls]
 Homepage = "http://github.com/gem/oq-platform-standalone"
-
-[tool.setuptools.package-data]
-where = [ "openquakeplatform" ]
-
+[tool.setuptools]
+packages = [ "openquakeplatform" ]
 [tool.setuptools.dynamic]
 version = {attr = "openquakeplatform.__version__"}
