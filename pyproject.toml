@@ -32,10 +32,8 @@ dependencies = [
 [project.urls]
 Homepage = "http://github.com/gem/oq-platform-standalone"
 
-[tool.setuptools.pacakge-data]
-include = [
-    "/openquakeplatform",
-]
+[tool.setuptools.package-data]
+where = [ "openquakeplatform" ]
 
 [tool.setuptools.dynamic]
 version = {attr = "openquakeplatform.__version__"}
