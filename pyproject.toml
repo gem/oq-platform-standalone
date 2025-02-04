@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 64.0", "wheel"]
+requires = ["setuptools >= 69.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -29,7 +29,7 @@ classifiers = [
 dependencies = [ "django >=4.2, <5", ]
 dynamic = [ "version", ]
 [project.urls]
-Homepage = "http://github.com/gem/oq-platform-standalone"
+Homepage = "https://github.com/gem/oq-platform-standalone"
 [tool.setuptools]
 packages = [ "openquakeplatform" ]
 [tool.setuptools.dynamic]
