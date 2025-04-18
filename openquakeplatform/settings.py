@@ -80,13 +80,14 @@ except ImportError:
 # Application definition
 INSTALLED_APPS = (
     # 'django.contrib.admin',
-    # 'django.contrib.auth',
-    # 'django.contrib.contenttypes',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
     # 'django.contrib.sessions',
     # 'django.contrib.messages',
     'django.contrib.staticfiles',
 
     'openquakeplatform',
+    'rest_framework'
 )
 
 # To be compliant the app must have
@@ -101,7 +102,9 @@ INSTALLED_APPS = (
 # in your local_settings.py
 STANDALONE_APPS = (
     'openquakeplatform_ipt',
-    'openquakeplatform_taxtweb',
+    # 'openquakeplatform_taxtweb',
+    'django_gem_taxonomy.apps.GemTaxonomyConfig',
+    # 'django_gem_taxonomy',
 )
 if not EXTERNAL_TOOLS:
     STANDALONE_APPS += (
