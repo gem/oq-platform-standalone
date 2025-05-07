@@ -101,7 +101,8 @@ INSTALLED_APPS = (
 # in your local_settings.py
 STANDALONE_APPS = (
     'openquakeplatform_ipt',
-    'openquakeplatform_taxtweb',
+    # turn off installation and execution tests
+    # 'openquakeplatform_taxtweb',
 )
 if not EXTERNAL_TOOLS:
     STANDALONE_APPS += (
