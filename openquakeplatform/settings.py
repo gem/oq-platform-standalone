@@ -104,8 +104,12 @@ STANDALONE_APPS = (
     'openquakeplatform_ipt',
     # 'openquakeplatform_taxtweb',
     'django_gem_taxonomy.apps.GemTaxonomyConfig',
-    'openquakeplatform_taxonomy',
 )
+
+if not EXTERNAL_TOOLS:
+    STANDALONE_APPS += (
+        'openquakeplatform_taxonomy',
+    )
 
 
 MIDDLEWARE_CLASSES = (
