@@ -21,14 +21,24 @@ def oq_context_processor(request):
     context variables.
     """
 
+    app_name_map = {
+        'openquakeplatform_ipt': 'ipt',
+        'openquakeplatform_taxonomy': 'glossary',
+        'django_gem_taxonomy': 'taxonomy'
+    }
+
     context = {}
 
     context['app_list'] = []
 
     cl_list = ['calc', 'share', 'explore']
-    for ct, app in enumerate(settings.STANDALONE_APPS):
+    for ct, app_full in enumerate(settings.STANDALONE_APPS):
+        app = app_full.split('.')[0]
         # remove 'openquakeplatform_' suffix with slicing
-        app_name = app[18:]
+        if app in app_name_map:
+            app_name = app_name_map[app]
+        else:
+            app_name = app[18:]
         appmod = import_module(app, 'header_info')
         appmod.header_info['url'] = reverse(app_name + ':home')
         appmod.header_info['class'] = cl_list[ct % 3]

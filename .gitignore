@@ -2,6 +2,7 @@
 *.egg-info
 *.sqlite3
 /openquakeplatform_server/local_settings.py
+/openquakeplatform/test/config/moon_config.py
 /data
 # Setuptool stuff
 /build
