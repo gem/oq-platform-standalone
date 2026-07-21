@@ -369,8 +369,19 @@ _devtest_innervm_run () {
     ssh -t  $lxc_ip "mkdir -p $GEM_GIT_PACKAGE"
     scp -r * "${lxc_ip}:$GEM_GIT_PACKAGE"
     sa_apps="oq-engine $sa_apps oq-moon"
+
+    declare -A app_repos=(
+        ["oq-engine"]="oq-engine"
+        ["oq-moon"]="oq-moon"
+        ["openquakeplatform_ipt"]="oq-platform-ipt"
+        ["openquakeplatform_taxonomy"]="oq-platform-taxonomy"
+        ["django_gem_taxonomy"]="django-gem-taxonomy"
+    )
+
     for app in $sa_apps; do
-        app_repo="${app/openquakeplatform_/oq-platform-}"
+        # app substitution is needed because django_gem_taxonomy is defined with a proper django class
+        # and not simply with a package name
+        app_repo="${app_repos[${app/.*/}"]}"
 
         # ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/$GEM_GIT_PACKAGE"
         if [ "$plugins_branch_id" ]; then
