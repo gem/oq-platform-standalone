@@ -381,7 +381,7 @@ _devtest_innervm_run () {
     for app in $sa_apps; do
         # app substitution is needed because django_gem_taxonomy is defined with a proper django class
         # and not simply with a package name
-        app_repo="${app_repos[${app/.*/}"]}"
+        app_repo="${app_repos[${app/.*/}]}"
 
         # ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/$GEM_GIT_PACKAGE"
         if [ "$plugins_branch_id" ]; then
