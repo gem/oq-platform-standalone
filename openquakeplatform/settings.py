@@ -104,7 +104,7 @@ STANDALONE_APPS = (
     'openquakeplatform_ipt',
     # 'openquakeplatform_taxtweb',
     #'django_gem_taxonomy.apps.GemTaxonomyConfig',
-    'django_gem_taxonomy',
+    'django-gem-taxonomy',
 )
 
 if not EXTERNAL_TOOLS:
