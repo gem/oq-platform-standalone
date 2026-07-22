@@ -65,6 +65,17 @@ if [ $GEM_SET_DEBUG ]; then
     set -x
 fi
 set -e
+
+declare -A app_repos=(
+    ["oq-engine"]="oq-engine"
+    ["oq-moon"]="oq-moon"
+    ["openquakeplatform_ipt"]="oq-platform-ipt"
+    ["openquakeplatform_taxonomy"]="oq-platform-taxonomy"
+    ["django_gem_taxonomy"]="django-gem-taxonomy"
+)
+export app_repos
+
+
 GEM_GIT_REPO="$(echo "${repository:-git@github.com:gem/oq-platform-standalone.git}" | sed 's@/[^/]*$@@g')"
 GEM_GIT_PACKAGE="oq-platform-standalone"
 GEM_DEB_PACKAGE="python-${GEM_GIT_PACKAGE}"
@@ -370,14 +381,6 @@ _devtest_innervm_run () {
     scp -r * "${lxc_ip}:$GEM_GIT_PACKAGE"
     sa_apps="oq-engine $sa_apps oq-moon"
 
-    declare -A app_repos=(
-        ["oq-engine"]="oq-engine"
-        ["oq-moon"]="oq-moon"
-        ["openquakeplatform_ipt"]="oq-platform-ipt"
-        ["openquakeplatform_taxonomy"]="oq-platform-taxonomy"
-        ["django_gem_taxonomy"]="django-gem-taxonomy"
-    )
-
     for app in $sa_apps; do
         # app substitution is needed because django_gem_taxonomy is defined with a proper django class
         # and not simply with a package name
@@ -397,7 +400,8 @@ export GEM_WAIT_BEFORE_CLOSE=$GEM_WAIT_BEFORE_CLOSE
 install_with_reqs () {
     local app=\$1
     local app_reponame
-    app_reponame=\"\${app/openquakeplatform_/oq-platform-}\"
+    app_reponame=\"\${app_repos[\${app/.*/}]}\"
+    # app_reponame=\"\${app/openquakeplatform_/oq-platform-}\"
 
     echo \"Python version:\"
     python --version
