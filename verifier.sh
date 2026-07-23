@@ -400,6 +400,7 @@ export GEM_WAIT_BEFORE_CLOSE=$GEM_WAIT_BEFORE_CLOSE
 install_with_reqs () {
     local app=\$1
     local app_reponame
+    $(declare -p app_repos)
     app_reponame=\"\${app_repos[\${app/.*/}]}\"
     # app_reponame=\"\${app/openquakeplatform_/oq-platform-}\"
 
