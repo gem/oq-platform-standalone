@@ -69,6 +69,7 @@ set -e
 declare -Ax app_repos=(
     ["oq-engine"]="oq-engine"
     ["oq-moon"]="oq-moon"
+    ["openquakeplatform_standalone"]="oq-platform-standalone"
     ["openquakeplatform_ipt"]="oq-platform-ipt"
     ["openquakeplatform_taxonomy"]="oq-platform-taxonomy"
     ["django_gem_taxonomy"]="django-gem-taxonomy"
