@@ -66,14 +66,13 @@ if [ $GEM_SET_DEBUG ]; then
 fi
 set -e
 
-declare -A app_repos=(
+declare -Ax app_repos=(
     ["oq-engine"]="oq-engine"
     ["oq-moon"]="oq-moon"
     ["openquakeplatform_ipt"]="oq-platform-ipt"
     ["openquakeplatform_taxonomy"]="oq-platform-taxonomy"
     ["django_gem_taxonomy"]="django-gem-taxonomy"
 )
-export app_repos
 
 
 GEM_GIT_REPO="$(echo "${repository:-git@github.com:gem/oq-platform-standalone.git}" | sed 's@/[^/]*$@@g')"
@@ -401,6 +400,7 @@ install_with_reqs () {
     local app=\$1
     local app_reponame
     $(declare -p app_repos)
+    echo \"install_with_reqs [\$app]\"
     app_reponame=\"\${app_repos[\${app/.*/}]}\"
     # app_reponame=\"\${app/openquakeplatform_/oq-platform-}\"
 
