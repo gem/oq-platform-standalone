@@ -398,6 +398,8 @@ export GEM_SET_DEBUG=$GEM_SET_DEBUG
 export GEM_WAIT_BEFORE_CLOSE=$GEM_WAIT_BEFORE_CLOSE
 
 install_with_reqs () {
+    echo \"install_with_reqs CHECK\"
+    echo \"VIRTUAL_ENV: \$VIRTUAL_ENV\"
     local app=\$1
     local app_reponame
     $(declare -p app_repos)
@@ -456,9 +458,9 @@ sudo cp geckodriver /usr/local/bin
 
 cd \$HOME
 #run it
-eval '${GEM_PYTHON_VERSION} -c \"import sys; print(sys.version)\"'
+$GEM_PYTHON_VERSION -c \"import sys; print(sys.version)\"
 sleep 2
-eval '${GEM_PYTHON_VERSION} -m venv venv'
+$GEM_PYTHON_VERSION -m venv venv
 source venv/bin/activate
 pip install -U pip
 pip install -U nose3
@@ -474,6 +476,8 @@ for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS 
     install_with_reqs \"\$app\"
 done
 # FIXME: remove after bug identification
+echo \"FIRST CHECK\"
+echo \"VIRTUAL_ENV: \$VIRTUAL_ENV\"
 echo pip list
 pip list
 echo pip freeze
@@ -501,6 +505,8 @@ if [ -z \$GEM_TOOLS_ONLY ]; then
     cp local_settings.py.tools local_settings.py
 fi
 # FIXME: list of installed packages for development reasons
+echo \"SECOND CHECK\"
+echo \"VIRTUAL_ENV: \$VIRTUAL_ENV\"
 echo pip list
 pip list
 echo pip freeze
