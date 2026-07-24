@@ -401,7 +401,7 @@ install_with_reqs () {
     local app=\$1
     local app_reponame
     $(declare -p app_repos)
-    echo \"install_with_reqs [\$app]\"
+    echo \"install_with_reqs [\${app/.*/}]\"
     app_reponame=\"\${app_repos[\${app/.*/}]}\"
     # app_reponame=\"\${app/openquakeplatform_/oq-platform-}\"
 
@@ -473,6 +473,11 @@ done
 for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
     install_with_reqs \"\$app\"
 done
+# FIXME: remove after bug identification
+echo pip list
+pip list
+echo pip freeze
+pip freeze
 rm -f \"\$REQMIRROR\"
 
 rm -f demos-*.zip
@@ -495,6 +500,11 @@ cd oq-engine/openquake/server
 if [ -z \$GEM_TOOLS_ONLY ]; then
     cp local_settings.py.tools local_settings.py
 fi
+# FIXME: list of installed packages for development reasons
+echo pip list
+pip list
+echo pip freeze
+pip freeze
 python manage.py migrate
 python manage.py loaddata ./fixtures/0001_cookie_consent_required_plus_hide_cookie_bar.json
 python manage.py loaddata ./fixtures/0002_cookie_consent_analytics.json
