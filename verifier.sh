@@ -511,6 +511,8 @@ echo pip list
 pip list
 echo pip freeze
 pip freeze
+echo manage help
+python manage.py help
 python manage.py migrate
 python manage.py loaddata ./fixtures/0001_cookie_consent_required_plus_hide_cookie_bar.json
 python manage.py loaddata ./fixtures/0002_cookie_consent_analytics.json
