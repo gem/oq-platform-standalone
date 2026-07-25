@@ -477,6 +477,7 @@ for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS 
 done
 # FIXME: remove after bug identification
 echo \"FIRST CHECK\"
+echo \"PYTHONPATH: \$PYTHONPATH\"
 echo \"VIRTUAL_ENV: \$VIRTUAL_ENV\"
 echo pip list
 pip list
@@ -506,6 +507,7 @@ if [ -z \$GEM_TOOLS_ONLY ]; then
 fi
 # FIXME: list of installed packages for development reasons
 echo \"SECOND CHECK\"
+echo \"PYTHONPATH: \$PYTHONPATH\"
 echo \"VIRTUAL_ENV: \$VIRTUAL_ENV\"
 echo pip list
 pip list
