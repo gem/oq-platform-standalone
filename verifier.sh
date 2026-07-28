@@ -454,7 +454,8 @@ GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '\${Version}' firefox)\"
 . selenium-deps-2023
 
 export GEM_NATIVE_FIREFOX_VERSION=140.13
-export GEM_SELENIUM_VERSION=4.46.0
+# selenium deps inside moon
+# export GEM_SELENIUM_VERSION=4.46.0
 export GEM_GECKODRIVER_VERSION=0.37.1
 
 # wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
@@ -473,7 +474,8 @@ $GEM_PYTHON_VERSION -m venv venv
 source venv/bin/activate
 pip install -U pip
 pip install -U nose3
-pip install -U selenium==\${GEM_SELENIUM_VERSION}
+# selenium deps inside moon
+# pip install -U selenium==\${GEM_SELENIUM_VERSION}
 pip install -e oq-moon/
 REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
