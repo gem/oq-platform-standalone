@@ -380,7 +380,6 @@ _devtest_innervm_run () {
     ssh -t  $lxc_ip "mkdir -p $GEM_GIT_PACKAGE"
     scp -r * "${lxc_ip}:$GEM_GIT_PACKAGE"
     sa_apps="oq-engine $sa_apps oq-moon"
-
     for app in $sa_apps; do
         # app substitution is needed because django_gem_taxonomy is defined with a proper django class
         # and not simply with a package name
@@ -398,14 +397,10 @@ export GEM_SET_DEBUG=$GEM_SET_DEBUG
 export GEM_WAIT_BEFORE_CLOSE=$GEM_WAIT_BEFORE_CLOSE
 
 install_with_reqs () {
-    echo \"install_with_reqs CHECK\"
-    echo \"VIRTUAL_ENV: \$VIRTUAL_ENV\"
     local app=\$1
     local app_reponame
     $(declare -p app_repos)
-    echo \"install_with_reqs [\${app/.*/}]\"
     app_reponame=\"\${app_repos[\${app/.*/}]}\"
-    # app_reponame=\"\${app/openquakeplatform_/oq-platform-}\"
 
     echo \"Python version:\"
     python --version
@@ -449,19 +444,11 @@ if [ \$GEM_SET_DEBUG ]; then
 fi
 
 rm -f selenium-deps
-wget \"http://ftp.openquake.org/common/selenium-deps-2023\"
+wget \"http://ftp.openquake.org/common/selenium-deps-2026\"
 GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '\${Version}' firefox)\"
-. selenium-deps-2023
+. selenium-deps-2026
 
-export GEM_NATIVE_FIREFOX_VERSION=140.13
-# selenium deps inside moon
-# export GEM_SELENIUM_VERSION=4.46.0
-export GEM_GECKODRIVER_VERSION=0.37.1
-
-# wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
-
-# FIXME: no access to ftp.openquake.org => not possible to add new driver
-wget \"https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz\"
+wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 
 tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
@@ -486,14 +473,6 @@ done
 for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
     install_with_reqs \"\$app\"
 done
-# FIXME: remove after bug identification
-echo \"FIRST CHECK\"
-echo \"PYTHONPATH: \$PYTHONPATH\"
-echo \"VIRTUAL_ENV: \$VIRTUAL_ENV\"
-echo pip list
-pip list
-echo pip freeze
-pip freeze
 rm -f \"\$REQMIRROR\"
 
 rm -f demos-*.zip
@@ -516,16 +495,6 @@ cd oq-engine/openquake/server
 if [ -z \$GEM_TOOLS_ONLY ]; then
     cp local_settings.py.tools local_settings.py
 fi
-# FIXME: list of installed packages for development reasons
-echo \"SECOND CHECK\"
-echo \"PYTHONPATH: \$PYTHONPATH\"
-echo \"VIRTUAL_ENV: \$VIRTUAL_ENV\"
-echo pip list
-pip list
-echo pip freeze
-pip freeze
-echo manage help
-python manage.py help
 python manage.py migrate
 python manage.py loaddata ./fixtures/0001_cookie_consent_required_plus_hide_cookie_bar.json
 python manage.py loaddata ./fixtures/0002_cookie_consent_analytics.json
