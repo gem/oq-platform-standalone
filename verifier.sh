@@ -454,7 +454,7 @@ GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '\${Version}' firefox)\"
 . selenium-deps-2023
 
 export GEM_NATIVE_FIREFOX_VERSION=140.13
-export GEM_SELENIUM_VERSION=4.46
+export GEM_SELENIUM_VERSION=4.46.0
 export GEM_GECKODRIVER_VERSION=0.37.1
 
 # wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
