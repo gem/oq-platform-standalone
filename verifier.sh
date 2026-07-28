@@ -452,7 +452,16 @@ rm -f selenium-deps
 wget \"http://ftp.openquake.org/common/selenium-deps-2023\"
 GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '\${Version}' firefox)\"
 . selenium-deps-2023
-wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
+
+export GEM_NATIVE_FIREFOX_VERSION=140.13
+export GEM_SELENIUM_VERSION=4.46
+export GEM_GECKODRIVER_VERSION=0.37.1
+
+# wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
+
+# FIXME: no access to ftp.openquake.org => not possible to add new driver
+wget \"https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz\"
+
 tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
 
