@@ -534,18 +534,16 @@ fi
 #sleep 40000
 # python -m openquake.moon.nose_runner --failurecatcher dev_py3 -v -s --with-xunit --xunit-file=xunit-platform-dev_py3.xml openquakeplatform/test # || true
 
-test_list=\"\"
-$(declare -p app_repos)
-for app in \${GEM_OPT_PACKAGES/,/ }; do
-    app_reponame=\"\${app_repos[\${app/.*/}]}\"
-    if [ -d \"../\${app_reponame}/test\" ]; then
-         app_to_test=\"\${app_to_test} ../\${app_reponame}/test\"
-    fi
-done
-
-
-
-pytest --tb=short -vs openquakeplatform/test \$app_to_test
+# REIMPLEMENT A METHOD TO EXTRACT test FOLDERS DYNAMICALLY
+# test_list=\"\"
+# $(declare -p app_repos)
+# for app in \${GEM_OPT_PACKAGES/,/ }; do
+#     app_reponame=\"\${app_repos[\${app/.*/}]}\"
+#     if [ -d \"../\${app_reponame}/test\" ]; then
+#          app_to_test=\"\${app_to_test} ../\${app_reponame}/test\"
+#     fi
+# done
+pytest --tb=short -vs openquakeplatform/test ../oq-platform-ipt/openquakeplatform_ipt/test
 sleep 3
 #sleep 40000 || true
 kill \$server
