@@ -460,7 +460,7 @@ sleep 2
 $GEM_PYTHON_VERSION -m venv venv
 source venv/bin/activate
 pip install -U pip
-pip install -U nose3
+# pip install -U nose3
 # selenium deps inside moon
 # pip install -U selenium==\${GEM_SELENIUM_VERSION}
 pip install -e oq-moon/
@@ -528,7 +528,8 @@ if [ \$engine_reply -ne 1 ]; then
     exit 1
 fi
 #sleep 40000
-python -m openquake.moon.nose_runner --failurecatcher dev_py3 -v -s --with-xunit --xunit-file=xunit-platform-dev_py3.xml openquakeplatform/test # || true
+# python -m openquake.moon.nose_runner --failurecatcher dev_py3 -v -s --with-xunit --xunit-file=xunit-platform-dev_py3.xml openquakeplatform/test # || true
+pytest --tb=short -vs openquakeplatform/test
 sleep 3
 #sleep 40000 || true
 kill \$server
