@@ -438,6 +438,10 @@ rem_sig_hand() {
     fi
 }
 trap rem_sig_hand ERR
+
+#
+#  MAIN
+#
 set -e
 if [ \$GEM_SET_DEBUG ]; then
     set -x
@@ -529,7 +533,19 @@ if [ \$engine_reply -ne 1 ]; then
 fi
 #sleep 40000
 # python -m openquake.moon.nose_runner --failurecatcher dev_py3 -v -s --with-xunit --xunit-file=xunit-platform-dev_py3.xml openquakeplatform/test # || true
-pytest --tb=short -vs openquakeplatform/test
+
+test_list=\"\"
+$(declare -p app_repos)
+for app in \${GEM_OPT_PACKAGES/,/ }; do
+    app_reponame=\"\${app_repos[\${app/.*/}]}\"
+    if [ -d \"../\${app_reponame}/test\" ]; then
+         app_to_test=\"\${app_to_test} ../\${app_reponame}/test\"
+    fi
+done
+
+
+
+pytest --tb=short -vs openquakeplatform/test \$app_to_test
 sleep 3
 #sleep 40000 || true
 kill \$server
