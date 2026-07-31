@@ -503,6 +503,9 @@ cd oq-engine/openquake/server
 if [ "$GEM_TOOLS_ONLY" ]; then
     cp local_settings.py.tools local_settings.py
 fi
+# FIXME: indentify which local_settings.py usage instead of ....tools because without it tests fail
+cp local_settings.py.tools local_settings.py
+
 python manage.py migrate
 python manage.py loaddata ./fixtures/0001_cookie_consent_required_plus_hide_cookie_bar.json
 python manage.py loaddata ./fixtures/0002_cookie_consent_analytics.json
