@@ -389,7 +389,7 @@ _devtest_innervm_run () {
         app_repo="${app_repos[${app/.*/}]}"
 
         # ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/$GEM_GIT_PACKAGE"
-        if [ "$plugins_branch_id" ]; then
+        if [ "$branch_id" != "$plugins_branch_id" ]; then
             plugins_pfx="git clone --depth=1 -b $plugins_branch_id $repo_id/$app_repo || "
         fi
 
@@ -622,10 +622,6 @@ _lxc_name_and_ip_get()
 #
 devtest_run () {
     local deps old_ifs branch_id="$1" plugins_branch_id="$2"
-
-    if [ "$branch_id" = "$plugins_branch_id" ]; then
-        plugins_branch_id=""
-    fi
 
     sudo echo
     if [ "$GEM_EPHEM_EXE" = "$GEM_EPHEM_NAME" ]; then
