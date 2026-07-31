@@ -451,7 +451,7 @@ if [ \$GEM_SET_DEBUG ]; then
     set -x
 fi
 
-rm -f selenium-deps
+rm -f selenium-deps-2026
 wget \"http://ftp.openquake.org/common/selenium-deps-2026\"
 GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '\${Version}' firefox)\"
 . selenium-deps-2026
