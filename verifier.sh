@@ -62,6 +62,7 @@
 
 # export PS4='+${BASH_SOURCE}:${LINENO}:${FUNCNAME[0]}: '
 if [ $GEM_SET_DEBUG ]; then
+    export PS4='+${BASH_SOURCE}:${LINENO}:${FUNCNAME[0]}: '
     set -x
 fi
 set -e
@@ -362,7 +363,7 @@ _devtest_innervm_run () {
     scp .gem_init.sh ${lxc_ip}:
     scp .gem_ffox_init.sh ${lxc_ip}:
 
-    sa_apps="$(python -c "from openquakeplatform.settings import STANDALONE_APPS ; print(' '.join(STANDALONE_APPS))")"
+    sa_apps="$(python3 -c "from openquakeplatform.settings import STANDALONE_APPS ; print(' '.join(STANDALONE_APPS))")"
     # build oq-hazardlib speedups and put in the right place
     ssh -t  $lxc_ip "sudo systemctl stop apt-daily.timer"
     ssh -t  $lxc_ip "source .gem_init.sh"
@@ -378,7 +379,9 @@ _devtest_innervm_run () {
     # use copy of repository instead of clone it from github, if you want it comment next 2 lines and
     # uncomment the commented git clone line
     ssh -t  $lxc_ip "mkdir -p $GEM_GIT_PACKAGE"
-    scp -r * "${lxc_ip}:$GEM_GIT_PACKAGE"
+    scp -v -r * "${lxc_ip}:$GEM_GIT_PACKAGE"
+    echo DOLLAQUEST
+    echo $?
     sa_apps="oq-engine $sa_apps oq-moon"
     for app in $sa_apps; do
         # app substitution is needed because django_gem_taxonomy is defined with a proper django class
@@ -444,6 +447,7 @@ trap rem_sig_hand ERR
 #
 set -e
 if [ \$GEM_SET_DEBUG ]; then
+    export PS4='+${BASH_SOURCE}:${LINENO}:${FUNCNAME[0]}: '
     set -x
 fi
 
