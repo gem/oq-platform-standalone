@@ -84,7 +84,7 @@ GEM_DEB_SERIE="master"
 GEM_PYTHON_VERSION="python3.11"
 GEM_PY_VERSION="py311"
 if [ -z "$GEM_TOOLS_ONLY" ]; then
-GEM_TOOLS_ONLY=${GEM_TOOLS_ONLY}
+    GEM_TOOLS_ONLY=${GEM_TOOLS_ONLY}
 fi
 if [ -z "$GEM_DEB_REPO" ]; then
     GEM_DEB_REPO="$HOME/gem_ubuntu_repo"
@@ -495,12 +495,12 @@ export GEM_TIME_INVARIANT_OUTPUTS=y
 export NUMBA_DISABLE_JIT=1
 
 # run webui
-echo \$GEM_TOOLS_ONLY
-echo \$TOOLS_DEV
+echo GEM_TOOLS_ONLY: $GEM_TOOLS_ONLY
+echo TOOLS_DEV: $TOOLS_DEV
 sudo mkdir -p /var/www/webui
 sudo chown -R ubuntu /var/www/webui
 cd oq-engine/openquake/server
-if [ -z \$GEM_TOOLS_ONLY ]; then
+if [ "$GEM_TOOLS_ONLY" ]; then
     cp local_settings.py.tools local_settings.py
 fi
 python manage.py migrate
