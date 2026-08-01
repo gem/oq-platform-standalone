@@ -62,9 +62,21 @@
 
 # export PS4='+${BASH_SOURCE}:${LINENO}:${FUNCNAME[0]}: '
 if [ $GEM_SET_DEBUG ]; then
+    export PS4='+${BASH_SOURCE}:${LINENO}:${FUNCNAME[0]}: '
     set -x
 fi
 set -e
+
+declare -Ax app_repos=(
+    ["oq-engine"]="oq-engine"
+    ["oq-moon"]="oq-moon"
+    ["oq-platform-standalone"]="oq-platform-standalone"
+    ["openquakeplatform_ipt"]="oq-platform-ipt"
+    ["openquakeplatform_taxonomy"]="oq-platform-taxonomy"
+    ["django_gem_taxonomy"]="django-gem-taxonomy"
+)
+
+
 GEM_GIT_REPO="$(echo "${repository:-git@github.com:gem/oq-platform-standalone.git}" | sed 's@/[^/]*$@@g')"
 GEM_GIT_PACKAGE="oq-platform-standalone"
 GEM_DEB_PACKAGE="python-${GEM_GIT_PACKAGE}"
@@ -72,7 +84,7 @@ GEM_DEB_SERIE="master"
 GEM_PYTHON_VERSION="python3.11"
 GEM_PY_VERSION="py311"
 if [ -z "$GEM_TOOLS_ONLY" ]; then
-GEM_TOOLS_ONLY=${GEM_TOOLS_ONLY}
+    GEM_TOOLS_ONLY=${GEM_TOOLS_ONLY}
 fi
 if [ -z "$GEM_DEB_REPO" ]; then
     GEM_DEB_REPO="$HOME/gem_ubuntu_repo"
@@ -89,7 +101,7 @@ GEM_MAXLOOP=20
 GEM_ALWAYS_YES=false
 
 if [ "$GEM_EPHEM_NAME" = "" ]; then
-    GEM_EPHEM_NAME="ubuntu16-x11-lxc-eph"
+    GEM_EPHEM_NAME="debian13-x11-lxc-eph"
 fi
 
 LXC_VER=$(lxc-ls --version | cut -d '.' -f 1)
@@ -351,7 +363,7 @@ _devtest_innervm_run () {
     scp .gem_init.sh ${lxc_ip}:
     scp .gem_ffox_init.sh ${lxc_ip}:
 
-    sa_apps="$(python -c "from openquakeplatform.settings import STANDALONE_APPS ; print(' '.join(STANDALONE_APPS))")"
+    sa_apps="$(python3 -c "from openquakeplatform.settings import STANDALONE_APPS ; print(' '.join(STANDALONE_APPS))")"
     # build oq-hazardlib speedups and put in the right place
     ssh -t  $lxc_ip "sudo systemctl stop apt-daily.timer"
     ssh -t  $lxc_ip "source .gem_init.sh"
@@ -367,13 +379,17 @@ _devtest_innervm_run () {
     # use copy of repository instead of clone it from github, if you want it comment next 2 lines and
     # uncomment the commented git clone line
     ssh -t  $lxc_ip "mkdir -p $GEM_GIT_PACKAGE"
-    scp -r * "${lxc_ip}:$GEM_GIT_PACKAGE"
+    scp -v -r * "${lxc_ip}:$GEM_GIT_PACKAGE"
+    echo DOLLAQUEST
+    echo $?
     sa_apps="oq-engine $sa_apps oq-moon"
     for app in $sa_apps; do
-        app_repo="${app/openquakeplatform_/oq-platform-}"
+        # app substitution is needed because django_gem_taxonomy is defined with a proper django class
+        # and not simply with a package name
+        app_repo="${app_repos[${app/.*/}]}"
 
         # ssh -t  $lxc_ip "git clone --depth=1 -b $branch_id $repo_id/$GEM_GIT_PACKAGE"
-        if [ "$plugins_branch_id" ]; then
+        if [ "$branch_id" != "$plugins_branch_id" ]; then
             plugins_pfx="git clone --depth=1 -b $plugins_branch_id $repo_id/$app_repo || "
         fi
 
@@ -386,7 +402,8 @@ export GEM_WAIT_BEFORE_CLOSE=$GEM_WAIT_BEFORE_CLOSE
 install_with_reqs () {
     local app=\$1
     local app_reponame
-    app_reponame=\"\${app/openquakeplatform_/oq-platform-}\"
+    $(declare -p app_repos)
+    app_reponame=\"\${app_repos[\${app/.*/}]}\"
 
     echo \"Python version:\"
     python --version
@@ -424,28 +441,36 @@ rem_sig_hand() {
     fi
 }
 trap rem_sig_hand ERR
+
+#
+#  MAIN
+#
 set -e
 if [ \$GEM_SET_DEBUG ]; then
+    export PS4='+${BASH_SOURCE}:${LINENO}:${FUNCNAME[0]}: '
     set -x
 fi
 
-rm -f selenium-deps
-wget \"http://ftp.openquake.org/common/selenium-deps-2023\"
+rm -f selenium-deps-2026
+wget \"http://ftp.openquake.org/common/selenium-deps-2026\"
 GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '\${Version}' firefox)\"
-. selenium-deps-2023
+. selenium-deps-2026
+
 wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
+
 tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
 
 cd \$HOME
 #run it
-eval '${GEM_PYTHON_VERSION} -c \"import sys; print(sys.version)\"'
+$GEM_PYTHON_VERSION -c \"import sys; print(sys.version)\"
 sleep 2
-eval '${GEM_PYTHON_VERSION} -m venv venv'
+$GEM_PYTHON_VERSION -m venv venv
 source venv/bin/activate
 pip install -U pip
-pip install -U nose3
-pip install -U selenium==\${GEM_SELENIUM_VERSION}
+# pip install -U nose3
+# selenium deps inside moon
+# pip install -U selenium==\${GEM_SELENIUM_VERSION}
 pip install -e oq-moon/
 REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
@@ -470,14 +495,17 @@ export GEM_TIME_INVARIANT_OUTPUTS=y
 export NUMBA_DISABLE_JIT=1
 
 # run webui
-echo \$GEM_TOOLS_ONLY
-echo \$TOOLS_DEV
+echo GEM_TOOLS_ONLY: $GEM_TOOLS_ONLY
+echo TOOLS_DEV: $TOOLS_DEV
 sudo mkdir -p /var/www/webui
 sudo chown -R ubuntu /var/www/webui
 cd oq-engine/openquake/server
-if [ -z \$GEM_TOOLS_ONLY ]; then
+if [ "$GEM_TOOLS_ONLY" ]; then
     cp local_settings.py.tools local_settings.py
 fi
+# FIXME: indentify which local_settings.py usage instead of ....tools because without it tests fail
+cp local_settings.py.tools local_settings.py
+
 python manage.py migrate
 python manage.py loaddata ./fixtures/0001_cookie_consent_required_plus_hide_cookie_bar.json
 python manage.py loaddata ./fixtures/0002_cookie_consent_analytics.json
@@ -511,7 +539,18 @@ if [ \$engine_reply -ne 1 ]; then
     exit 1
 fi
 #sleep 40000
-python -m openquake.moon.nose_runner --failurecatcher dev_py3 -v -s --with-xunit --xunit-file=xunit-platform-dev_py3.xml openquakeplatform/test # || true
+# python -m openquake.moon.nose_runner --failurecatcher dev_py3 -v -s --with-xunit --xunit-file=xunit-platform-dev_py3.xml openquakeplatform/test # || true
+
+# REIMPLEMENT A METHOD TO EXTRACT test FOLDERS DYNAMICALLY
+# test_list=\"\"
+# $(declare -p app_repos)
+# for app in \${GEM_OPT_PACKAGES/,/ }; do
+#     app_reponame=\"\${app_repos[\${app/.*/}]}\"
+#     if [ -d \"../\${app_reponame}/test\" ]; then
+#          app_to_test=\"\${app_to_test} ../\${app_reponame}/test\"
+#     fi
+# done
+pytest --tb=short -vs openquakeplatform/test ../oq-platform-ipt/openquakeplatform_ipt/test
 sleep 3
 #sleep 40000 || true
 kill \$server
@@ -586,10 +625,6 @@ _lxc_name_and_ip_get()
 #
 devtest_run () {
     local deps old_ifs branch_id="$1" plugins_branch_id="$2"
-
-    if [ "$branch_id" = "$plugins_branch_id" ]; then
-        plugins_branch_id=""
-    fi
 
     sudo echo
     if [ "$GEM_EPHEM_EXE" = "$GEM_EPHEM_NAME" ]; then
