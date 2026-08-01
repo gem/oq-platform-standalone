@@ -7,6 +7,7 @@ from http.server import HTTPServer
 import threading
 
 from openquake.moon import platform_get, platform_del
+from openquakeplatform.test import setup_package, teardown_package
 
 
 PUBLIC_DIRECTORY = os.path.join(os.path.dirname(__file__), 'webpages')
@@ -39,13 +40,8 @@ def package_setup_teardown():
         time.sleep(0.2)
         continue
             
-    pla = platform_get()
-    pla.init(landing="/index.html", autologin=False)
+    setup_package()
     
     yield  # This tells pytest to go execute all the tests
     
-    # --- TEARDOWN CODE GOES HERE ---
-    print("\n[Teardown] This runs ONCE after all tests in this package finish")
-
-    pla.fini()
-    
+    teardown_package()
