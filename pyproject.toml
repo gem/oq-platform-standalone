@@ -28,9 +28,17 @@ classifiers = [
 ]
 dependencies = [ "django >=4.2, <5", ]
 dynamic = [ "version", ]
+
+[project.optional-dependencies]
+test = [
+    "pytest ~= 9.1.1",
+]
+
 [project.urls]
 Homepage = "https://github.com/gem/oq-platform-standalone"
+
 [tool.setuptools]
 packages = [ "openquakeplatform" ]
+
 [tool.setuptools.dynamic]
 version = {attr = "openquakeplatform.__version__"}
