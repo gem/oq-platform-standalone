@@ -660,17 +660,17 @@ devtest_run () {
         ssh -t  $lxc_ip "cd ~/$GEM_GIT_PACKAGE; . platform-env/bin/activate ; killall runserver.sh"
     fi
 
-    if [ "$LXC_DESTROY" = "true" ]; then
-        sudo $LXC_TERM -n $lxc_name
-    fi
-
-    set -e
-
     if [ "$GEM_WAIT_BEFORE_CLOSE" ]; then
         if [ $inner_ret -ne 0 ]; then
             sleep 200000 || true
         fi
     fi
+
+    if [ "$LXC_DESTROY" = "true" ]; then
+        sudo $LXC_TERM -n $lxc_name
+    fi
+
+    set -e
 
     return $inner_ret
 }
