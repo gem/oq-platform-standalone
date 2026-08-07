@@ -397,6 +397,7 @@ _devtest_innervm_run () {
     done
     ssh -t  $lxc_ip ":
 export GEM_SET_DEBUG=$GEM_SET_DEBUG
+export GEM_GIT_PACKAGE=$GEM_GIT_PACKAGE
 export GEM_WAIT_BEFORE_CLOSE=$GEM_WAIT_BEFORE_CLOSE
 
 install_with_reqs () {
