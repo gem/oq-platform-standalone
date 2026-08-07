@@ -418,7 +418,11 @@ install_with_reqs () {
     #     pip install -r \$REQMIRROR
     # fi
 
-    pip install -e \"\$app_reponame\"
+    inst_sfx=""
+    if [ \"\$app\" == \"\$GEM_GIT_PACKAGE\" ]; then
+        inst_sfx=\"[test]\"
+    fi
+    pip install -e \"\$app_reponame\$inst_sfx\"
 
     if [ \"\$app_reponame\" = \"oq-platform-taxtweb\" ]; then
         export PYBUILD_NAME=oq-taxonomy
@@ -459,6 +463,7 @@ no-index = true
 no-cache-dir = true
 find-links =
     https://wheelhouse.openquake.org/unified/
+    https://wheelhouse.openquake.org/selenium-4.46.0-deps/
     https://wheelhouse.openquake.org/py/standalone/post-inst/
 EOF
 
