@@ -407,21 +407,22 @@ install_with_reqs () {
 
     echo \"Python version:\"
     python --version
-    if [ -f \${app_reponame}/requirements-${GEM_PY_VERSION}-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt ]; then
-        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-${GEM_PY_VERSION}-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt > \$REQMIRROR
-        pip install -r \$REQMIRROR
-    elif [ -f \${app_reponame}/requirements-${GEM_PY_VERSION}-\${BUILD_OS}.txt ]; then
-        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-${GEM_PY_VERSION}-\${BUILD_OS}.txt > \$REQMIRROR
-        pip install -r \$REQMIRROR
-    fi
-    if [ \"\$app\" = \"oq-engine\" ]; then
+
+
+    # disabled because use pip with pip.conf and installation using pyproject deps
+    # if [ -f \${app_reponame}/requirements-${GEM_PY_VERSION}-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt ]; then
+    #     sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-${GEM_PY_VERSION}-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt > \$REQMIRROR
+    #     pip install -r \$REQMIRROR
+    # elif [ -f \${app_reponame}/requirements-${GEM_PY_VERSION}-\${BUILD_OS}.txt ]; then
+    #     sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-${GEM_PY_VERSION}-\${BUILD_OS}.txt > \$REQMIRROR
+    #     pip install -r \$REQMIRROR
+    # fi
+
+    pip install -e \"\$app_reponame\"
+
+    if [ \"\$app_reponame\" = \"oq-platform-taxtweb\" ]; then
+        export PYBUILD_NAME=oq-taxonomy
         pip install -e \"\$app_reponame\"
-    else
-        pip install -e \"\$app_reponame\"
-        if [ \"\$app_reponame\" = \"oq-platform-taxtweb\" ]; then
-            export PYBUILD_NAME=oq-taxonomy
-            pip install -e \"\$app_reponame\"
-        fi
     fi
 }
 
@@ -451,6 +452,16 @@ if [ \$GEM_SET_DEBUG ]; then
     set -x
 fi
 
+mkdir -p \$HOME/.config/pip
+cat << 'EOF' >\$HOME/.config/pip/pip.conf
+[global]
+no-index = true
+no-cache-dir = true
+find-links =
+    https://wheelhouse.openquake.org/unified/
+    https://wheelhouse.openquake.org/py/standalone/post-inst/
+EOF
+
 rm -f selenium-deps-2026
 wget \"http://ftp.openquake.org/common/selenium-deps-2026\"
 GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '\${Version}' firefox)\"
@@ -467,15 +478,11 @@ $GEM_PYTHON_VERSION -c \"import sys; print(sys.version)\"
 sleep 2
 $GEM_PYTHON_VERSION -m venv venv
 source venv/bin/activate
-pip install -U pip
-# pip install -U nose3
-# selenium deps inside moon
-# pip install -U selenium==\${GEM_SELENIUM_VERSION}
-pip install -e oq-moon/
+pip --isolated install -U pip
 REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
 
-for app in oq-engine oq-platform-standalone; do
+for app in oq-engine oq-moon oq-platform-standalone; do
     install_with_reqs \"\$app\"
 done
 for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
