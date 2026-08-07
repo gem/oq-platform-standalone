@@ -409,20 +409,11 @@ install_with_reqs () {
     echo \"Python version:\"
     python --version
 
-
-    # disabled because use pip with pip.conf and installation using pyproject deps
-    # if [ -f \${app_reponame}/requirements-${GEM_PY_VERSION}-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt ]; then
-    #     sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-${GEM_PY_VERSION}-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt > \$REQMIRROR
-    #     pip install -r \$REQMIRROR
-    # elif [ -f \${app_reponame}/requirements-${GEM_PY_VERSION}-\${BUILD_OS}.txt ]; then
-    #     sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-${GEM_PY_VERSION}-\${BUILD_OS}.txt > \$REQMIRROR
-    #     pip install -r \$REQMIRROR
-    # fi
-
     inst_sfx=""
     if [ \"\$app\" == \"\$GEM_GIT_PACKAGE\" ]; then
         inst_sfx=\"[test]\"
     fi
+    # ALL RELEVANT PARAMETERS ARE INSIDE $HOME/.config/pip/pip.conf FILE DEFINED ABOVE
     pip install -e \"\$app_reponame\$inst_sfx\"
 
     if [ \"\$app_reponame\" = \"oq-platform-taxtweb\" ]; then
