@@ -434,7 +434,7 @@ rem_sig_hand() {
     trap ERR
     echo 'signal trapped'
     if [ \"\$GEM_WAIT_BEFORE_CLOSE\" = \"true\" ]; then
-         sleep 20000 || true
+         sleep 200000 || true
     fi
     if [ -f /tmp/server.pid ]; then
          server=\$(cat /tmp/server.pid)
@@ -664,6 +664,12 @@ devtest_run () {
     fi
 
     set -e
+
+    if [ "$GEM_WAIT_BEFORE_CLOSE" ]; then
+        if [ $inner_ret -ne 0 ]; then
+            sleep 200000 || true
+        fi
+    fi
 
     return $inner_ret
 }
