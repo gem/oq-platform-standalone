@@ -1,3 +1,3 @@
 # in settings.py you can find info to know if
 # is STANDALONE or not
-__version__="2.17.0"
+__version__="2.18.0"

@@ -397,6 +397,7 @@ _devtest_innervm_run () {
     done
     ssh -t  $lxc_ip ":
 export GEM_SET_DEBUG=$GEM_SET_DEBUG
+export GEM_GIT_PACKAGE=$GEM_GIT_PACKAGE
 export GEM_WAIT_BEFORE_CLOSE=$GEM_WAIT_BEFORE_CLOSE
 
 install_with_reqs () {
@@ -407,21 +408,17 @@ install_with_reqs () {
 
     echo \"Python version:\"
     python --version
-    if [ -f \${app_reponame}/requirements-${GEM_PY_VERSION}-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt ]; then
-        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-${GEM_PY_VERSION}-${GEM_GIT_PACKAGE}-\${BUILD_OS}.txt > \$REQMIRROR
-        pip install -r \$REQMIRROR
-    elif [ -f \${app_reponame}/requirements-${GEM_PY_VERSION}-\${BUILD_OS}.txt ]; then
-        sed 's/cdn\.ftp\.openquake\.org/ftp.openquake.org/g' \${app_reponame}/requirements-${GEM_PY_VERSION}-\${BUILD_OS}.txt > \$REQMIRROR
-        pip install -r \$REQMIRROR
+
+    inst_sfx=""
+    if [ \"\$app\" == \"\$GEM_GIT_PACKAGE\" ]; then
+        inst_sfx=\"[test]\"
     fi
-    if [ \"\$app\" = \"oq-engine\" ]; then
+    # ALL RELEVANT PARAMETERS ARE INSIDE $HOME/.config/pip/pip.conf FILE DEFINED ABOVE
+    pip install -e \"\$app_reponame\$inst_sfx\"
+
+    if [ \"\$app_reponame\" = \"oq-platform-taxtweb\" ]; then
+        export PYBUILD_NAME=oq-taxonomy
         pip install -e \"\$app_reponame\"
-    else
-        pip install -e \"\$app_reponame\"
-        if [ \"\$app_reponame\" = \"oq-platform-taxtweb\" ]; then
-            export PYBUILD_NAME=oq-taxonomy
-            pip install -e \"\$app_reponame\"
-        fi
     fi
 }
 
@@ -429,7 +426,7 @@ rem_sig_hand() {
     trap ERR
     echo 'signal trapped'
     if [ \"\$GEM_WAIT_BEFORE_CLOSE\" = \"true\" ]; then
-         sleep 20000 || true
+         sleep 200000 || true
     fi
     if [ -f /tmp/server.pid ]; then
          server=\$(cat /tmp/server.pid)
@@ -451,6 +448,17 @@ if [ \$GEM_SET_DEBUG ]; then
     set -x
 fi
 
+mkdir -p \$HOME/.config/pip
+cat << 'EOF' >\$HOME/.config/pip/pip.conf
+[global]
+no-index = true
+no-cache-dir = true
+find-links =
+    https://wheelhouse.openquake.org/unified/
+    https://wheelhouse.openquake.org/selenium-4.46.0-deps/
+    https://wheelhouse.openquake.org/py/standalone/post-inst/
+EOF
+
 rm -f selenium-deps-2026
 wget \"http://ftp.openquake.org/common/selenium-deps-2026\"
 GEM_FIREFOX_VERSION=\"\$(dpkg-query --show -f '\${Version}' firefox)\"
@@ -467,15 +475,11 @@ $GEM_PYTHON_VERSION -c \"import sys; print(sys.version)\"
 sleep 2
 $GEM_PYTHON_VERSION -m venv venv
 source venv/bin/activate
-pip install -U pip
-# pip install -U nose3
-# selenium deps inside moon
-# pip install -U selenium==\${GEM_SELENIUM_VERSION}
-pip install -e oq-moon/
+pip --isolated install -U pip
 REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
 
-for app in oq-engine oq-platform-standalone; do
+for app in oq-engine oq-moon oq-platform-standalone; do
     install_with_reqs \"\$app\"
 done
 for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
@@ -645,6 +649,12 @@ devtest_run () {
 
     if [ $inner_ret != 0 ]; then
         ssh -t  $lxc_ip "cd ~/$GEM_GIT_PACKAGE; . platform-env/bin/activate ; killall runserver.sh"
+    fi
+
+    if [ "$GEM_WAIT_BEFORE_CLOSE" ]; then
+        if [ $inner_ret -ne 0 ]; then
+            sleep 200000 || true
+        fi
     fi
 
     if [ "$LXC_DESTROY" = "true" ]; then
