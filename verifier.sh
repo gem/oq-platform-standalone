@@ -455,7 +455,6 @@ no-index = true
 no-cache-dir = true
 find-links =
     https://wheelhouse.openquake.org/unified/
-    https://wheelhouse.openquake.org/selenium-4.46.0-deps/
     https://wheelhouse.openquake.org/py/standalone/post-inst/
 EOF
 
