@@ -510,6 +510,7 @@ fi
 # FIXME: indentify which local_settings.py usage instead of ....tools because without it tests fail
 cp local_settings.py.tools local_settings.py
 
+oq engine --upgrade-db
 python manage.py migrate
 python manage_py openquake_engine_postinstall
 python manage.py loaddata ./fixtures/0001_cookie_consent_required_plus_hide_cookie_bar.json
