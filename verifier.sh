@@ -513,7 +513,8 @@ cp local_settings.py.tools local_settings.py
 oq engine --upgrade-db
 python manage.py migrate
 for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
-    python manage.py openquake_engine_postinstall \$app
+    app_name=\"\${app/.*/}\"
+    python manage.py openquake_engine_postinstall \$app_name
 done
 python manage.py loaddata ./fixtures/0001_cookie_consent_required_plus_hide_cookie_bar.json
 python manage.py loaddata ./fixtures/0002_cookie_consent_analytics.json
