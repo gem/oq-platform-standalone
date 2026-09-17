@@ -396,6 +396,7 @@ _devtest_innervm_run () {
         ssh -t  $lxc_ip "${plugins_pfx}git clone --depth=1 -b $branch_id $repo_id/${app_repo} || git clone --depth=1 $repo_id/${app_repo}"
     done
     ssh -t  $lxc_ip ":
+set -x
 export GEM_SET_DEBUG=$GEM_SET_DEBUG
 export GEM_GIT_PACKAGE=$GEM_GIT_PACKAGE
 export GEM_WAIT_BEFORE_CLOSE=$GEM_WAIT_BEFORE_CLOSE
