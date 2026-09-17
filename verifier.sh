@@ -512,7 +512,7 @@ cp local_settings.py.tools local_settings.py
 
 oq engine --upgrade-db
 python manage.py migrate
-python manage_py openquake_engine_postinstall
+python manage.py openquake_engine_postinstall
 python manage.py loaddata ./fixtures/0001_cookie_consent_required_plus_hide_cookie_bar.json
 python manage.py loaddata ./fixtures/0002_cookie_consent_analytics.json
 python manage.py collectstatic
