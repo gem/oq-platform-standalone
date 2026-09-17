@@ -401,6 +401,14 @@ export GEM_GIT_PACKAGE=$GEM_GIT_PACKAGE
 export GEM_WAIT_BEFORE_CLOSE=$GEM_WAIT_BEFORE_CLOSE
 
 install_with_reqs () {
+    run_install=false
+    case \"\$1\":
+    --run-install)
+        run_install=true
+        shift
+    *)
+        break
+
     local app=\$1
     local app_reponame
     $(declare -p app_repos)
@@ -413,8 +421,14 @@ install_with_reqs () {
     if [ \"\$app\" == \"\$GEM_GIT_PACKAGE\" ]; then
         inst_sfx=\"[test]\"
     fi
-    # ALL RELEVANT PARAMETERS ARE INSIDE $HOME/.config/pip/pip.conf FILE DEFINED ABOVE
-    pip install -e \"\$app_reponame\$inst_sfx\"
+    if [ \"\$run_install\" == \"true\" ]; then
+        pushd \"\$app_reponame\"
+        python install.py devel
+        popd
+    else
+        # ALL RELEVANT PARAMETERS ARE INSIDE $HOME/.config/pip/pip.conf FILE DEFINED ABOVE
+        pip install -e \"\$app_reponame\$inst_sfx\"
+    fi
 
     if [ \"\$app_reponame\" = \"oq-platform-taxtweb\" ]; then
         export PYBUILD_NAME=oq-taxonomy
@@ -478,12 +492,15 @@ pip --isolated install -U pip
 REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
 
-for app in oq-engine oq-moon oq-platform-standalone; do
+for app in oq-moon oq-platform-standalone; do
     install_with_reqs \"\$app\"
 done
 for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
     install_with_reqs \"\$app\"
 done
+
+install_with_reqs --run-install oq-engine
+
 rm -f \"\$REQMIRROR\"
 
 rm -f demos-*.zip
