@@ -426,7 +426,7 @@ install_with_reqs () {
     fi
     if [ \"\$run_install\" == \"true\" ]; then
         pushd \"\$app_reponame\"
-        python install.py devel
+        python install.py --novenv devel
         popd
     else
         # ALL RELEVANT PARAMETERS ARE INSIDE $HOME/.config/pip/pip.conf FILE DEFINED ABOVE
