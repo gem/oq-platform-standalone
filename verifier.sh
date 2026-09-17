@@ -396,22 +396,11 @@ _devtest_innervm_run () {
         ssh -t  $lxc_ip "${plugins_pfx}git clone --depth=1 -b $branch_id $repo_id/${app_repo} || git clone --depth=1 $repo_id/${app_repo}"
     done
     ssh -t  $lxc_ip ":
-set -x
 export GEM_SET_DEBUG=$GEM_SET_DEBUG
 export GEM_GIT_PACKAGE=$GEM_GIT_PACKAGE
 export GEM_WAIT_BEFORE_CLOSE=$GEM_WAIT_BEFORE_CLOSE
 
 install_with_reqs () {
-    run_install=false
-    case \"\$1\" in
-    --run-install)
-        run_install=true
-        shift
-        ;;
-    *)
-        break
-        ;;
-    esac
     local app=\$1
     local app_reponame
     $(declare -p app_repos)
@@ -424,14 +413,8 @@ install_with_reqs () {
     if [ \"\$app\" == \"\$GEM_GIT_PACKAGE\" ]; then
         inst_sfx=\"[test]\"
     fi
-    if [ \"\$run_install\" == \"true\" ]; then
-        pushd \"\$app_reponame\"
-        python install.py --novenv devel
-        popd
-    else
-        # ALL RELEVANT PARAMETERS ARE INSIDE $HOME/.config/pip/pip.conf FILE DEFINED ABOVE
-        pip install -e \"\$app_reponame\$inst_sfx\"
-    fi
+    # ALL RELEVANT PARAMETERS ARE INSIDE $HOME/.config/pip/pip.conf FILE DEFINED ABOVE
+    pip install -e \"\$app_reponame\$inst_sfx\"
 
     if [ \"\$app_reponame\" = \"oq-platform-taxtweb\" ]; then
         export PYBUILD_NAME=oq-taxonomy
@@ -495,14 +478,12 @@ pip --isolated install -U pip
 REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
 
-for app in oq-moon oq-platform-standalone; do
+for app in oq-engine oq-moon oq-platform-standalone; do
     install_with_reqs \"\$app\"
 done
 for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
     install_with_reqs \"\$app\"
 done
-
-install_with_reqs --run-install oq-engine
 
 rm -f \"\$REQMIRROR\"
 
@@ -530,6 +511,7 @@ fi
 cp local_settings.py.tools local_settings.py
 
 python manage.py migrate
+python manage_py openquake_engine_postinstall
 python manage.py loaddata ./fixtures/0001_cookie_consent_required_plus_hide_cookie_bar.json
 python manage.py loaddata ./fixtures/0002_cookie_consent_analytics.json
 python manage.py collectstatic
