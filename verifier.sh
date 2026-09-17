@@ -403,7 +403,7 @@ export GEM_WAIT_BEFORE_CLOSE=$GEM_WAIT_BEFORE_CLOSE
 
 install_with_reqs () {
     run_install=false
-    case \"\$1\":
+    case \"\$1\" in
     --run-install)
         run_install=true
         shift
