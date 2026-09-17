@@ -411,7 +411,7 @@ install_with_reqs () {
     *)
         break
         ;;
-
+    esac
     local app=\$1
     local app_reponame
     $(declare -p app_repos)
