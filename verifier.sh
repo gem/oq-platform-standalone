@@ -407,8 +407,10 @@ install_with_reqs () {
     --run-install)
         run_install=true
         shift
+        ;;
     *)
         break
+        ;;
 
     local app=\$1
     local app_reponame
