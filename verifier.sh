@@ -478,7 +478,7 @@ pip --isolated install -U pip
 REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
 
-pip install django==5.2
+pip install --isolated --index-url https://pypi.org/simple django==5.2
 
 for app in oq-engine oq-moon oq-platform-standalone; do
     install_with_reqs \"\$app\"
