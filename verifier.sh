@@ -478,7 +478,7 @@ pip --isolated install -U pip
 REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
 
-pip install --isolated --index-url https://pypi.org/simple django==5.2
+pip install --isolated --index-url https://pypi.org/simple django==5.2.19
 pip install --isolated --index-url https://pypi.org/simple django-cors-headers==4.9.0
 pip install --isolated --index-url https://pypi.org/simple django-cookie-consent==1.0.0
 
