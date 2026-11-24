@@ -413,12 +413,13 @@ install_with_reqs () {
         inst_sfx=\"[test]\"
     fi
     # ALL RELEVANT PARAMETERS ARE INSIDE $HOME/.config/pip/pip.conf FILE DEFINED ABOVE
-    pip install -e \"\$app_reponame\$inst_sfx\"
-
-    if [ \"\$app_reponame\" = \"oq-platform-taxtweb\" ]; then
-        export PYBUILD_NAME=oq-taxonomy
-        pip install -e \"\$app_reponame\"
+    if [ \"\$app\" == \"oq-engine\" ]; then
+        pip install -r \"\$app_reponame\"/requirements-\$GEM_PYTHON_VERSION.txt
+        pip install -e \"\$app_reponame\$inst_sfx\"
+    else
+        pip install -e \"\$app_reponame\$inst_sfx\"
     fi
+
 }
 
 rem_sig_hand() {
@@ -469,7 +470,7 @@ sudo cp geckodriver /usr/local/bin
 
 cd \$HOME
 for GEM_PYTHON_VERSION in $GEM_PYTHON_VERSIONS; do
-GEM_PY_VERSION=\"py\$(echo \"\$GEM_PYTHON_VERSION\" | sed 's/^python3\.//;s/\.//g')\"
+GEM_PY_VERSION=\"py\$(echo \"\$GEM_PYTHON_VERSION\" | sed 's/^python//;s/\.//g')\"
 VENV_NAME=\"venv-\$GEM_PY_VERSION\"
 rm -rf \"\$VENV_NAME\"
 #run it
