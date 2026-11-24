@@ -658,10 +658,6 @@ devtest_run () {
     copy_common dev
     copy_dev
 
-    if [ $inner_ret != 0 ]; then
-        ssh -t  $lxc_ip "cd ~/$GEM_GIT_PACKAGE; . platform-env/bin/activate ; killall runserver.sh"
-    fi
-
     if [ "$GEM_WAIT_BEFORE_CLOSE" = "true" ]; then
         if [ $inner_ret -ne 0 ]; then
             sleep 200000 || true
