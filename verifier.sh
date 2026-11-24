@@ -415,7 +415,7 @@ install_with_reqs () {
     # ALL RELEVANT PARAMETERS ARE INSIDE $HOME/.config/pip/pip.conf FILE DEFINED ABOVE
     if [ \"\$app\" == \"oq-engine\" ]; then
 		echo "this folder is $(pwd)"
-		sleep 120
+		sleep 30
         if [ -f \"\$app_reponame/requirements-\$GEM_PY_VERSION-linux64.txt\" ]; then
             pip install -r \"\$app_reponame/requirements-\$GEM_PY_VERSION-linux64.txt\"
         else
