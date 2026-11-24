@@ -655,7 +655,7 @@ devtest_run () {
 	echo ' _devtest_innervm_run "$branch_id" "$lxc_ip" "$plugins_branch_id" '
     _devtest_innervm_run "$branch_id" "$lxc_ip" "$plugins_branch_id"
     inner_ret=$?
-	sleep 600
+	sleep 3
 
     copy_common dev
     copy_dev
