@@ -416,7 +416,11 @@ install_with_reqs () {
     if [ \"\$app\" == \"oq-engine\" ]; then
 		echo "this folder is $(pwd)"
 		sleep 120
-        pip install -r \"\$app_reponame\"/requirements-\$GEM_PY_VERSION-linux64.txt
+        if [ -f \"\$app_reponame/requirements-\$GEM_PY_VERSION-linux64.txt\" ]; then
+            pip install -r \"\$app_reponame/requirements-\$GEM_PY_VERSION-linux64.txt\"
+        else
+            echo \"WARNING: \$app_reponame/requirements-\$GEM_PY_VERSION-linux64.txt not found, skipping\"
+        fi
         pip install -e \"\$app_reponame\$inst_sfx\"
     else
         pip install -e \"\$app_reponame\$inst_sfx\"
@@ -470,8 +474,8 @@ wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_V
 tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
 
-cd \$HOME
 for GEM_PYTHON_VERSION in $GEM_PYTHON_VERSIONS; do
+cd \$HOME
 GEM_PY_VERSION=\"py\$(echo \"\$GEM_PYTHON_VERSION\" | sed 's/^python//;s/\.//g')\"
 GEM_PY_VER=\"\${GEM_PY_VERSION#py}\"
 VENV_NAME=\"venv-\$GEM_PY_VERSION\"
