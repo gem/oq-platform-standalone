@@ -414,7 +414,7 @@ install_with_reqs () {
     fi
     # ALL RELEVANT PARAMETERS ARE INSIDE $HOME/.config/pip/pip.conf FILE DEFINED ABOVE
     if [ \"\$app\" == \"oq-engine\" ]; then
-        pip install -r \"\$app_reponame\"/requirements-\$GEM_PYTHON_VERSION.txt
+        pip install -r \"\$app_reponame\"/requirements-\$GEM_PY_VER.txt
         pip install -e \"\$app_reponame\$inst_sfx\"
     else
         pip install -e \"\$app_reponame\$inst_sfx\"
@@ -471,6 +471,7 @@ sudo cp geckodriver /usr/local/bin
 cd \$HOME
 for GEM_PYTHON_VERSION in $GEM_PYTHON_VERSIONS; do
 GEM_PY_VERSION=\"py\$(echo \"\$GEM_PYTHON_VERSION\" | sed 's/^python//;s/\.//g')\"
+GEM_PY_VER=\"\${GEM_PY_VERSION#py}\"
 VENV_NAME=\"venv-\$GEM_PY_VERSION\"
 rm -rf \"\$VENV_NAME\"
 #run it
