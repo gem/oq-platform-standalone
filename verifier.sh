@@ -414,7 +414,7 @@ install_with_reqs () {
     fi
     # ALL RELEVANT PARAMETERS ARE INSIDE $HOME/.config/pip/pip.conf FILE DEFINED ABOVE
     if [ \"\$app\" == \"oq-engine\" ]; then
-        pip install -r \"\$app_reponame\"/requirements-\$GEM_PY_VER.txt
+        pip install -r \"\$app_reponame\"/requirements-\$GEM_PY_VERSION.txt
         pip install -e \"\$app_reponame\$inst_sfx\"
     else
         pip install -e \"\$app_reponame\$inst_sfx\"
