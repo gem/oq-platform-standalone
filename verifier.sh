@@ -81,8 +81,7 @@ GEM_GIT_REPO="$(echo "${repository:-git@github.com:gem/oq-platform-standalone.gi
 GEM_GIT_PACKAGE="oq-platform-standalone"
 GEM_DEB_PACKAGE="python-${GEM_GIT_PACKAGE}"
 GEM_DEB_SERIE="master"
-GEM_PYTHON_VERSION="python3.11"
-GEM_PY_VERSION="py311"
+GEM_PYTHON_VERSIONS="python3.13 python3.14"
 if [ -z "$GEM_TOOLS_ONLY" ]; then
     GEM_TOOLS_ONLY=${GEM_TOOLS_ONLY}
 fi
@@ -469,11 +468,15 @@ tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
 
 cd \$HOME
+for GEM_PYTHON_VERSION in $GEM_PYTHON_VERSIONS; do
+GEM_PY_VERSION=\"py\$(echo \"\$GEM_PYTHON_VERSION\" | sed 's/^python3\.//;s/\.//g')\"
+VENV_NAME=\"venv-\$GEM_PY_VERSION\"
+rm -rf \"\$VENV_NAME\"
 #run it
-$GEM_PYTHON_VERSION -c \"import sys; print(sys.version)\"
+\$GEM_PYTHON_VERSION -c \"import sys; print(sys.version)\"
 sleep 2
-$GEM_PYTHON_VERSION -m venv venv
-source venv/bin/activate
+\$GEM_PYTHON_VERSION -m venv \"\$VENV_NAME\"
+source \"\$VENV_NAME\"/bin/activate
 pip --isolated install -U pip
 REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
@@ -568,6 +571,7 @@ if kill -0 \$server >/dev/null 2>&1; then
     kill -KILL \$server
 fi
 deactivate
+done
 "
 
     echo "_devtest_innervm_run: exit"
