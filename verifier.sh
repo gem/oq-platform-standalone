@@ -650,8 +650,10 @@ devtest_run () {
 
     _wait_ssh $lxc_ip
     set +e
+	echo ' _devtest_innervm_run "$branch_id" "$lxc_ip" "$plugins_branch_id" '
     _devtest_innervm_run "$branch_id" "$lxc_ip" "$plugins_branch_id"
     inner_ret=$?
+	sleep 600
 
     copy_common dev
     copy_dev
