@@ -478,17 +478,17 @@ for GEM_PYTHON_VERSION in $GEM_PYTHON_VERSIONS; do
 cd \$HOME
 GEM_PY_VERSION=\"py\$(echo \"\$GEM_PYTHON_VERSION\" | sed 's/^python//;s/\.//g')\"
 GEM_PY_VER=\"\${GEM_PY_VERSION#py}\"
-VENV_NAME=\"\$HOME\venv-\$GEM_PY_VERSION\"
+VENV_NAME=\"\$HOME\venv-/$GEM_PY_VERSION\"
 echo "variables: \n"
-echo $GEM_PY_VERSION
-echo $GEM_PY_VER
-echo $VENV_NAME
+echo \$GEM_PY_VERSION
+echo \$GEM_PY_VER
+echo \$VENV_NAME
 sleep 60
 rm -rf \"\$VENV_NAME\"
 #run it
 \$GEM_PYTHON_VERSION -c \"import sys; print(sys.version)\"
 sleep 2
-#\$GEM_PYTHON_VERSION -m venv \"\$VENV_NAME\"
+#\$GEM_PYTHON_VERSION -m venv \$VENV_NAME
 #source \"\$VENV_NAME\"/bin/activate
 #pip --isolated install -U pip
 REQMIRROR=\$(mktemp)
