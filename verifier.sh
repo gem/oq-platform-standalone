@@ -478,7 +478,7 @@ for GEM_PYTHON_VERSION in $GEM_PYTHON_VERSIONS; do
 cd \$HOME
 GEM_PY_VERSION=\"py\$(echo \"\$GEM_PYTHON_VERSION\" | sed 's/^python//;s/\.//g')\"
 GEM_PY_VER=\"\${GEM_PY_VERSION#py}\"
-VENV_NAME=\$HOME\"venv-\$GEM_PY_VERSION\"
+VENV_NAME="\$HOME\venv-\$GEM_PY_VERSION\"
 echo "variables: \n"
 echo $GEM_PY_VERSION
 echo $GEM_PY_VER
