@@ -496,7 +496,7 @@ BUILD_OS=linux64
 cd oq-engine
 \$GEM_PYTHON_VERSION install.py devel --venv $VENV_NAME
 sleep 180
-source "\$VENV_NAME\"/bin/activate
+source \"\$VENV_NAME\"/bin/activate
 
 for app in  oq-moon oq-platform-standalone; do
     install_with_reqs \"\$app\"
