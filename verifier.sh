@@ -489,8 +489,8 @@ sleep 2
 REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
 cd oq-engine
-\$GEM_PYTHON_VERSION install.py devel --venv \$VENV_NAME
-source \"\$VENV_NAME\"/bin/activate
+\$GEM_PYTHON_VERSION install.py devel --venv $HOME\$VENV_NAME
+source $HOME\"\$VENV_NAME\"/bin/activate
 
 for app in  oq-moon oq-platform-standalone; do
     install_with_reqs \"\$app\"
