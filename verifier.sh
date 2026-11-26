@@ -486,7 +486,7 @@ echo \$VENV_NAME
 sleep 60
 echo "cleanup environment"
 rm -rf \"\$VENV_NAME\"
-sudo m -rf /var/www/
+sudo rm -rf /var/www/
 #run it
 \$GEM_PYTHON_VERSION -c \"import sys; print(sys.version)\"
 sleep 2
