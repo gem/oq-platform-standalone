@@ -81,8 +81,7 @@ GEM_GIT_REPO="$(echo "${repository:-git@github.com:gem/oq-platform-standalone.gi
 GEM_GIT_PACKAGE="oq-platform-standalone"
 GEM_DEB_PACKAGE="python-${GEM_GIT_PACKAGE}"
 GEM_DEB_SERIE="master"
-GEM_PYTHON_VERSION="python3.11"
-GEM_PY_VERSION="py311"
+GEM_PYTHON_VERSIONS="python3.13 python3.14"
 if [ -z "$GEM_TOOLS_ONLY" ]; then
     GEM_TOOLS_ONLY=${GEM_TOOLS_ONLY}
 fi
@@ -414,12 +413,19 @@ install_with_reqs () {
         inst_sfx=\"[test]\"
     fi
     # ALL RELEVANT PARAMETERS ARE INSIDE $HOME/.config/pip/pip.conf FILE DEFINED ABOVE
-    pip install -e \"\$app_reponame\$inst_sfx\"
-
-    if [ \"\$app_reponame\" = \"oq-platform-taxtweb\" ]; then
-        export PYBUILD_NAME=oq-taxonomy
-        pip install -e \"\$app_reponame\"
+    if [ \"\$app\" == \"oq-engine\" ]; then
+		echo "this folder is $(pwd)"
+		sleep 30
+        if [ -f \"\$app_reponame/requirements-\$GEM_PY_VERSION-linux64.txt\" ]; then
+            pip install -r \"\$app_reponame/requirements-\$GEM_PY_VERSION-linux64.txt\"
+        else
+            echo \"WARNING: \$app_reponame/requirements-\$GEM_PY_VERSION-linux64.txt not found, skipping\"
+        fi
+        pip install -e \"\$app_reponame\$inst_sfx\"
+    else
+        pip install -e \"\$app_reponame\$inst_sfx\"
     fi
+
 }
 
 rem_sig_hand() {
@@ -468,17 +474,33 @@ wget \"http://ftp.openquake.org/mirror/mozilla/geckodriver-v\${GEM_GECKODRIVER_V
 tar zxvf \"geckodriver-v\${GEM_GECKODRIVER_VERSION}-linux64.tar.gz\"
 sudo cp geckodriver /usr/local/bin
 
+for GEM_PYTHON_VERSION in $GEM_PYTHON_VERSIONS; do
 cd \$HOME
+GEM_PY_VERSION=\"py\$(echo \"\$GEM_PYTHON_VERSION\" | sed 's/^python//;s/\.//g')\"
+GEM_PY_VER=\"\${GEM_PY_VERSION#py}\"
+VENV_NAME=\"\$HOME/venv-\$GEM_PY_VERSION\"
+echo "variables: \n"
+echo \$GEM_PY_VERSION
+echo \$GEM_PY_VER
+echo \$VENV_NAME
+sleep 60
+echo "cleanup environment"
+rm -rf \"\$VENV_NAME\"
+sudo rm -rf /var/www/
 #run it
-$GEM_PYTHON_VERSION -c \"import sys; print(sys.version)\"
+\$GEM_PYTHON_VERSION -c \"import sys; print(sys.version)\"
 sleep 2
-$GEM_PYTHON_VERSION -m venv venv
-source venv/bin/activate
-pip --isolated install -U pip
+#\$GEM_PYTHON_VERSION -m venv \$VENV_NAME
+#source \"\$VENV_NAME\"/bin/activate
+#pip --isolated install -U pip
 REQMIRROR=\$(mktemp)
 BUILD_OS=linux64
-
-for app in oq-engine oq-moon oq-platform-standalone; do
+cd oq-engine
+\$GEM_PYTHON_VERSION install.py devel --venv  \"\$VENV_NAME\"
+sleep 180
+cd \$HOME
+source \"\$VENV_NAME\"/bin/activate
+for app in  oq-moon oq-platform-standalone; do
     install_with_reqs \"\$app\"
 done
 for app in \$(python -c 'from openquakeplatform.settings import STANDALONE_APPS ; print(\"\\n\".join(x for x in STANDALONE_APPS))'); do
@@ -568,6 +590,7 @@ if kill -0 \$server >/dev/null 2>&1; then
     kill -KILL \$server
 fi
 deactivate
+done
 "
 
     echo "_devtest_innervm_run: exit"
@@ -646,15 +669,13 @@ devtest_run () {
 
     _wait_ssh $lxc_ip
     set +e
+	echo ' _devtest_innervm_run "$branch_id" "$lxc_ip" "$plugins_branch_id" '
     _devtest_innervm_run "$branch_id" "$lxc_ip" "$plugins_branch_id"
     inner_ret=$?
+	sleep 3
 
     copy_common dev
     copy_dev
-
-    if [ $inner_ret != 0 ]; then
-        ssh -t  $lxc_ip "cd ~/$GEM_GIT_PACKAGE; . platform-env/bin/activate ; killall runserver.sh"
-    fi
 
     if [ "$GEM_WAIT_BEFORE_CLOSE" = "true" ]; then
         if [ $inner_ret -ne 0 ]; then
